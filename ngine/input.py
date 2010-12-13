@@ -72,8 +72,6 @@ class InputParser:
         for i in range(pygame.joystick.get_count()):
             joy=pygame.joystick.Joystick(i)
             joy.init()
-            #print 'axis', joy.get_numaxes()
-            #print 'axispos', joy.get_axis(0)
             
     def __abs_axis_value(self, value):
         ''' Get the joystick axis value and convert to -1, 0, 1. Direction
@@ -117,7 +115,6 @@ class InputParser:
         
     def bind_key(self, event, key, action, repeat=False):
         ''' Bind an action based on a keyboard event and a pressed key '''
-        
         '''@event: The event to be intercepted (input.KEY_UP or input.KEY_DOWN)
             @key: The key that should be pressed to fire up the action
             @action: The action to be fired up

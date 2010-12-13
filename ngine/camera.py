@@ -41,6 +41,8 @@ SLOW_PAN_STEP = 6
 MID_PAN_STEP = 12
 FAST_PAN_STEP = 24
 
+from ngine.resources import background
+
 class Camera:
     def __init__(self, screen, world_size, bg_color=None):
         self.rect = pygame.Rect(0, 0, screen.get_width(), screen.get_height())
@@ -59,6 +61,7 @@ class Camera:
         self.bg1 = None
         self.bg2 = None
         self.bg3 = None
+        self.bgh = background.BackgroundHandler()
         
     def __watch_edges(self, rect):
         # Watching for the world edges
@@ -75,7 +78,7 @@ class Camera:
         return rect
         
     def __update_bgs(self, updatebg2):
-        self.screen.fill(BG_COLOR)
+        self.clear()
         
         if (self.bg1 is not None): 
             self.screen.blit(self.bg1, (0,0))
@@ -134,12 +137,23 @@ class Camera:
             self.rect.topleft = testrect.topleft
         
     def set_backgrounds(self, bg1=None, bg2=None, bg3=None):
-        if (bg1 is not None): 
-            self.bg1 = loadpng(bg1)
-        if (bg2 is not None): 
-            self.bg2 = ScrollingImage(self.screen, bg2, -5, (0,0))
+        if bg1: 
+            #self.bg1 = loadpng(bg1)
+            key = bg1.split('.')[0]
+            print 'key1', key
+            self.bgh.load([bg1])
+            self.bg1 = self.bgh.get(key)
+        if bg2:
+            key = bg2.split('.')[0]
+            print 'key2', key
+            self.bgh.load([bg2])
+            self.bg2 = ScrollingImage(self.screen, self.bgh.get(key), -5, (0,0))
         if (bg3 is not None): 
-            self.bg3 = loadpng(bg3)
+            #self.bg3 = loadpng(bg3)
+            key = bg3.split('.')[0]
+            print 'key3', key
+            self.bgh.load([bg3])
+            self.bg3 = self.bgh.get(key)
         
     def set_target(self, sprite, pan=False):
         """ Used to set the target that camera must follow"""
@@ -248,25 +262,25 @@ class Camera:
                         s.rect.top-self.rect.top, s.rect.width, s.rect.height))
 
 class ScrollingImage:
-	def __init__(self, screen, picture, speed, pos):
-		self.screen = screen
-		self.speed = speed
-		self.image = loadpng(picture)
-		rect = self.image.get_rect()
-		self.size = (rect.width, rect.height)
-		self.pos = pos
-		self.offset = 0
-		
-	def scroll(self):
-		self.screen.blit(self.image, (self.offset, self.pos[1]))
-		self.screen.blit(self.image, (self.offset+self.size[0], self.pos[1]))
-		self.offset += self.speed
-		if (self.offset < -self.size[0]): self.offset=0
-	
-	def update(self):
-		self.screen.blit(self.image, (self.offset, self.pos[1]))
-		self.screen.blit(self.image, (self.offset+self.size[0], self.pos[1]))
-			
+    def __init__(self, screen, picture, speed, pos):
+        self.screen = screen
+        self.speed = speed
+        self.image = picture
+        rect = self.image.get_rect()
+        self.size = (rect.width, rect.height)
+        self.pos = pos
+        self.offset = 0
+        
+    def scroll(self):
+        self.screen.blit(self.image, (self.offset, self.pos[1]))
+        self.screen.blit(self.image, (self.offset+self.size[0], self.pos[1]))
+        self.offset += self.speed
+        if (self.offset < -self.size[0]): self.offset=0
+
+    def update(self):
+        self.screen.blit(self.image, (self.offset, self.pos[1]))
+        self.screen.blit(self.image, (self.offset+self.size[0], self.pos[1]))
+
 def loadpng(name):
 	""" Load image and return image object"""
 	#fullname = os.path.join('data', 'images', name)

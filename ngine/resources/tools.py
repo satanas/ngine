@@ -11,7 +11,7 @@
 import os
 
 def get_datafile_path(folder, filename):
-     #return os.path.realpath(os.path.join(os.path.dirname(__file__),
-     #   '..', '..', 'data', folder, filename))
      return os.path.realpath(os.path.join(os.path.dirname(__file__),
-        'data', folder, filename))
+        '..', '..', 'data', folder, filename))
+     #return os.path.realpath(os.path.join(os.path.dirname(__file__),
+     #   'data', folder, filename))

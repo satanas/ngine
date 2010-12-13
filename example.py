@@ -70,15 +70,15 @@ class Example:
         
         # We create a new instance of InputParser
         self.input=input.InputParser()
-        self.input.bind_key(LEFT, pygame.K_LEFT)
-        self.input.bind_key(RIGHT, pygame.K_RIGHT)
-        self.input.bind_key(UP, pygame.K_UP, False)
-        self.input.bind_key(DOWN, pygame.K_DOWN, False)
-        self.input.bind_key(ACTION1, pygame.K_SPACE)
-        self.input.bind_key(ACTION2, pygame.K_LCTRL)
-        self.input.bind_key(ACTION3, pygame.K_LSHIFT, True)
-        self.input.bind_key(EXIT, pygame.K_ESCAPE)
-        
+        self.input.bind_key(input.KEY_DOWN, pygame.K_LEFT, LEFT, True)
+        self.input.bind_key(input.KEY_DOWN, pygame.K_RIGHT, RIGHT, True)
+        self.input.bind_key(input.KEY_DOWN, pygame.K_UP, UP, True)
+        self.input.bind_key(input.KEY_DOWN, pygame.K_DOWN, DOWN, True)
+        self.input.bind_key(input.KEY_DOWN, pygame.K_SPACE, ACTION1)
+        self.input.bind_key(input.KEY_DOWN, pygame.K_LCTRL, ACTION2)
+        self.input.bind_key(input.KEY_DOWN, pygame.K_LSHIFT, ACTION3)
+        self.input.bind_key(input.KEY_DOWN, pygame.K_ESCAPE, EXIT)
+        '''
         self.input.bind_mouse_button(BUTTON1, input.MOUSE_BUTTON1)
         self.input.bind_mouse_button(MOTION, input.MOUSE_MOTION)
         
@@ -90,7 +90,7 @@ class Example:
         self.input.bind_joy_axis(RIGHT, input.JOY_AXIS_0_RIGHT)
         self.input.bind_joy_axis(UP, input.JOY_AXIS_1_UP)
         self.input.bind_joy_axis(DOWN, input.JOY_AXIS_1_DOWN)
-        
+        '''
         layer1 = pygame.sprite.Group()
         layer2 = pygame.sprite.Group()
         all = pygame.sprite.Group()
@@ -106,8 +106,8 @@ class Example:
         self.target3=DeadBox((400,390))
         
         self.camera = camera.Camera(self.screen, (600, 500))
-        self.camera.setTarget(self.box)
-        self.camera.setBackgrounds(bg2='bg1.png', bg3='bg3.png')
+        self.camera.set_target(self.box)
+        self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
         
         while True:
             self.clock.tick(60)
@@ -120,13 +120,13 @@ class Example:
             #layer2.update()
             all.update()
             self.camera.update()
-            self.camera.drawGroups([layer2, layer1])
+            self.camera.draw_groups([layer2, layer1])
             
             pygame.display.flip()
             
     def __gameControl(self):
         # We call the handle keyboard method
-        self.input.handleInput()
+        self.input.handle_input()
         
         if self.input.lookup(LEFT): 
             self.box.move(-2,0)
@@ -137,11 +137,11 @@ class Example:
         if self.input.lookup(DOWN): 
             self.box.move(0,2)
         if self.input.lookup(ACTION1): 
-            self.camera.panToPos(self.target2.rect.center)
+            self.camera.pan_to_pos(self.target2.rect.center)
         if self.input.lookup(ACTION2): 
-            self.camera.moveToPos(self.target3.rect.topleft, camera.TOPLEFT)
+            self.camera.move_to_pos(self.target3.rect.topleft, camera.TOPLEFT)
         if self.input.lookup(ACTION3): 
-            self.camera.moveToRel(2,0)
+            self.camera.move_to_rel(2,0)
         if self.input.lookup(BUTTON1): 
             print 'Hello'
         if self.input.lookup(EXIT): 
