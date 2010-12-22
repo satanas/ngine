@@ -9,6 +9,7 @@
 #===================================================
 
 import pygame
+from pygame import locals
 
 from ngine.resources import tools
 
@@ -22,7 +23,7 @@ class BackgroundHandler:
             filepath = tools.get_datafile_path('backgrounds', filename)
             try:
                 bg = pygame.image.load(filepath)
-                bg.set_colorkey((0, 0, 0), pygame.locals.RLEACCEL)
+                bg.set_colorkey((0, 0, 0), locals.RLEACCEL)
                 bg = bg.convert_alpha()
             except Exception, message:
                 raise SystemExit, message
