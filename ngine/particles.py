@@ -155,3 +155,5 @@ class ParticlesBoost:
         Particle(pos=pygame.mouse.get_pos(), angle=ang, size=s, 
                  color_type='interp', interp_time=20, init_color= (240,255,0), 
                  end_color=(255,0,0), duration=300, max_vx=1, max_vy=2, ax=0)
+                 
+# TODO: BloodParticles

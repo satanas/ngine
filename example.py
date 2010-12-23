@@ -168,7 +168,7 @@ class Example:
                 text = font.render('Effect: Trace', 1, (255,255,255))
             elif self.effect == 4: 
                 text = font.render('Effect: Boost', 1, (255,255,255))
-            inst = font.render('Left click to see effect. Right click to change it', 1, (255,255,255))
+            inst = font.render('Click on the screen to see the effect. Right click to change it', 1, (255,255,255))
             self.screen.blit(inst, (190,440))
             self.screen.blit(text, (250,460))
             
