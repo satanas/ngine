@@ -43,9 +43,8 @@ class Box(objects.Actor):
         image = pygame.Surface((32, 32))
         image.fill((255,0,0))
         self.set_image(image, (120, 120))
-        
-    def move(self, x_speed, y_speed):
-        self.rect.move_ip(x_speed, y_speed)
+        self.xspeed = 2
+        self.yspeed = 2
         
     def moveAbs(self, x, y):
         self.rect.center = (x, y)
@@ -63,14 +62,15 @@ class DeadBox(pygame.sprite.Sprite):
         self.rect.topleft=pos
         
 # A class that represent a little square box on screen
-class Block(objects.Actor, objects.PlatformObject):
+class Block(objects.Actor, objects.UnwalkableObject):
     def __init__(self, pos):
         objects.Actor.__init__(self)
-        objects.PlatformObject.__init__(self, True, True, True, True)
+        objects.UnwalkableObject.__init__(self, True, True, True, True)
         
         image = pygame.Surface((32, 32))
         image.fill((255,255,0))
         self.set_image(image, pos)
+        self.set_limits()
 
 # The main class that hold the funny part
 class Example:
@@ -148,13 +148,13 @@ class Example:
         self.input.handle_input()
         
         if self.input.lookup(LEFT): 
-            self.box.move(-2,0)
+            self.box.move(-1,0)
         if self.input.lookup(RIGHT): 
-            self.box.move(2,0)
+            self.box.move(1,0)
         if self.input.lookup(UP): 
-            self.box.move(0,-2)
+            self.box.move(0,-1)
         if self.input.lookup(DOWN): 
-            self.box.move(0,2)
+            self.box.move(0,1)
         if self.input.lookup(ACTION1): 
             self.camera.pan_to_pos(self.target2.rect.center)
         if self.input.lookup(ACTION2): 
