@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #===================================================
 # 
-# Handle colissions
+# Handle collisions
 #
 # Copyright (C) 2010 Wil Alvarez <wil.alejandro@gmail.com>
 #
@@ -20,7 +20,7 @@ def check(actor, obj):
     
     d2 = pow(x, 2) + pow(y, 2)
     r2 = pow(actor.radius + obj.radius, 2)
-    #print obj, d2, r2
+    
     if d2 <= r2:
         return obj.rect.colliderect(actor.rect)
     return False

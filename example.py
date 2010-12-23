@@ -16,7 +16,7 @@ import random
 from ngine import input
 from ngine import camera
 from ngine import resources
-from ngine import actor
+from ngine import objects
 from ngine import collisions
 
 # KEY BINDINGS (Defined by user)
@@ -36,9 +36,9 @@ BUTTON2 = 0x22
 BUTTON3 = 0x23
 
 # A class that represent a little square box on screen
-class Box(actor.Actor):
+class Box(objects.Actor):
     def __init__(self):
-        actor.Actor.__init__(self)
+        objects.Actor.__init__(self)
         
         image = pygame.Surface((32, 32))
         image.fill((255,0,0))
@@ -63,9 +63,10 @@ class DeadBox(pygame.sprite.Sprite):
         self.rect.topleft=pos
         
 # A class that represent a little square box on screen
-class Block(actor.Actor):
+class Block(objects.Actor, objects.PlatformObject):
     def __init__(self, pos):
-        actor.Actor.__init__(self)
+        objects.Actor.__init__(self)
+        objects.PlatformObject.__init__(self, True, True, True, True)
         
         image = pygame.Surface((32, 32))
         image.fill((255,255,0))
@@ -169,6 +170,7 @@ class Example:
         for obj in self.gblocks:
             if collisions.check(self.box, obj):
                 print id(obj), 'Mierrrda'
+                obj.collide(self.box)
         
 if __name__=="__main__":
     ex=Example()
