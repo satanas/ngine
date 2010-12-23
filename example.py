@@ -18,6 +18,7 @@ from ngine import camera
 from ngine import resources
 from ngine import objects
 from ngine import collisions
+from ngine import particles
 
 # KEY BINDINGS (Defined by user)
 LEFT = 0x10
@@ -77,8 +78,10 @@ class Example:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Camera Example')
-        self.screen=pygame.display.set_mode((640, 480))
+        self.screen = pygame.display.set_mode((640, 480))
         self.clock = pygame.time.Clock()
+        
+        self.effect = 0
         
         # We create a new instance of InputParser
         self.input=input.InputParser()
@@ -90,8 +93,10 @@ class Example:
         self.input.bind_key(input.KEY_DOWN, pygame.K_LCTRL, ACTION2)
         self.input.bind_key(input.KEY_DOWN, pygame.K_LSHIFT, ACTION3)
         self.input.bind_key(input.KEY_DOWN, pygame.K_ESCAPE, EXIT)
+        
+        self.input.bind_mouse_button(input.MOUSE_BUTTON_UP, 1, BUTTON1)
+        self.input.bind_mouse_button(input.MOUSE_BUTTON_UP, 3, BUTTON2)
         '''
-        self.input.bind_mouse_button(BUTTON1, input.MOUSE_BUTTON1)
         self.input.bind_mouse_button(MOTION, input.MOUSE_MOTION)
         
         self.input.bind_joy_button(ACTION1, input.JOY_BUTTON1)
@@ -110,6 +115,7 @@ class Example:
         
         Box.containers = all, layer1
         DeadBox.containers = all, layer2
+        particles.Particle.containers = all, layer2
         Block.containers = all, layer2, self.gblocks
         
         self.box=Box()
@@ -117,16 +123,18 @@ class Example:
         DeadBox((100,100))
         DeadBox((70,70))
         Block((200,20))
-        for i in range(1000):
+        for i in range(100):
             x = random.randint(30, 1950)
             y = random.randint(30, 1950)
-            b = Block((x,y))
+            Block((x,y))
         self.target2=DeadBox((200,200))
         self.target3=DeadBox((400,390))
         
         self.camera = camera.Camera(self.screen, (2000, 2000))
         self.camera.set_target(self.box)
         self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
+        
+        font = pygame.font.Font(None, 16)
         
         while True:
             self.clock.tick(60)
@@ -140,6 +148,29 @@ class Example:
             all.update()
             self.camera.update()
             self.camera.draw_groups([layer2, layer1])
+            
+            if self.effect == 3:
+                ang=random.randint(-25, 25)
+                particles.Particle(pos=pygame.mouse.get_pos(), angle=ang, 
+                                   size=1.8, color_type='random', duration=1500, 
+                                   vx=0.5, vy=1, ax=0, ay=0)
+            elif self.effect == 4:
+                particles.ParticlesBoost(pygame.mouse.get_pos(), 180, 2, 
+                                         particles=50)
+                
+            if self.effect == 0: 
+                text = font.render('Effect: Explosion', 1, (255,255,255))
+            elif self.effect == 1: 
+                text = font.render('Effect: Fireworks', 1, (255,255,255))
+            elif self.effect == 2: 
+                text = font.render('Effect: Shock', 1, (255,255,255))
+            elif self.effect == 3: 
+                text = font.render('Effect: Trace', 1, (255,255,255))
+            elif self.effect == 4: 
+                text = font.render('Effect: Boost', 1, (255,255,255))
+            inst = font.render('Left click to see effect. Right click to change it', 1, (255,255,255))
+            self.screen.blit(inst, (190,440))
+            self.screen.blit(text, (250,460))
             
             pygame.display.flip()
             
@@ -161,15 +192,27 @@ class Example:
             self.camera.move_to_pos(self.target3.rect.topleft, camera.TOPLEFT)
         if self.input.lookup(ACTION3): 
             self.camera.move_to_rel(2,0)
-        if self.input.lookup(BUTTON1): 
-            print 'Hello'
+        if self.input.lookup(BUTTON1):
+            if pygame.mouse.get_pos()[0] > 640/2: 
+                dir = 270
+            else: 
+                dir = 90
+            if self.effect == 0:
+                particles.ParticlesExplosion(pygame.mouse.get_pos(), 2)
+            elif self.effect == 1:
+                particles.ParticlesFirework(pygame.mouse.get_pos(), 2)
+            elif self.effect == 2:
+                particles.ParticlesShock(pygame.mouse.get_pos(), 1, dir, (0,255,0))
+        if self.input.lookup(BUTTON2): 
+            self.effect += 1
+            if self.effect > 4:
+                self.effect = 0
         if self.input.lookup(EXIT): 
             exit(0)
             
     def __check_collisions(self):
         for obj in self.gblocks:
             if collisions.check(self.box, obj):
-                print id(obj), 'Mierrrda'
                 obj.collide(self.box)
         
 if __name__=="__main__":
