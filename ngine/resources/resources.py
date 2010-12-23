@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 #===================================================
 # 
-# A module that let you create a 2D side-scrolling camera with some
-# optimizations
+# Handle all resources
 #
 # Copyright (C) 2010 Wil Alvarez <wil.alejandro@gmail.com>
 #

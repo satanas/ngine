@@ -11,10 +11,13 @@
 #===================================================
 
 import pygame
+import random
 
 from ngine import input
 from ngine import camera
 from ngine import resources
+from ngine import actor
+from ngine import collisions
 
 # KEY BINDINGS (Defined by user)
 LEFT = 0x10
@@ -33,13 +36,13 @@ BUTTON2 = 0x22
 BUTTON3 = 0x23
 
 # A class that represent a little square box on screen
-class Box(pygame.sprite.Sprite):
+class Box(actor.Actor):
     def __init__(self):
-        pygame.sprite.Sprite.__init__(self, self.containers)
-        self.image = pygame.Surface((32, 32))
-        self.image.fill((255,0,0))
-        self.rect = self.image.get_rect()
-        self.rect.topleft=(120, 120)
+        actor.Actor.__init__(self)
+        
+        image = pygame.Surface((32, 32))
+        image.fill((255,0,0))
+        self.set_image(image, (120, 120))
         
     def move(self, x_speed, y_speed):
         self.rect.move_ip(x_speed, y_speed)
@@ -58,14 +61,22 @@ class DeadBox(pygame.sprite.Sprite):
         self.image.fill((0,0,255))
         self.rect = self.image.get_rect()
         self.rect.topleft=pos
-
+        
+# A class that represent a little square box on screen
+class Block(actor.Actor):
+    def __init__(self, pos):
+        actor.Actor.__init__(self)
+        
+        image = pygame.Surface((32, 32))
+        image.fill((255,255,0))
+        self.set_image(image, pos)
 
 # The main class that hold the funny part
 class Example:
     def __init__(self):
         pygame.init()
         pygame.display.set_caption('Camera Example')
-        self.screen=pygame.display.set_mode((320, 320))
+        self.screen=pygame.display.set_mode((640, 480))
         self.clock = pygame.time.Clock()
         
         # We create a new instance of InputParser
@@ -93,19 +104,26 @@ class Example:
         '''
         layer1 = pygame.sprite.Group()
         layer2 = pygame.sprite.Group()
+        self.gblocks = pygame.sprite.Group()
         all = pygame.sprite.Group()
         
-        Box.containers=all, layer1
-        DeadBox.containers=all, layer2
+        Box.containers = all, layer1
+        DeadBox.containers = all, layer2
+        Block.containers = all, layer2, self.gblocks
         
         self.box=Box()
         DeadBox((0,0))
         DeadBox((100,100))
         DeadBox((70,70))
+        Block((200,20))
+        for i in range(1000):
+            x = random.randint(30, 1950)
+            y = random.randint(30, 1950)
+            b = Block((x,y))
         self.target2=DeadBox((200,200))
         self.target3=DeadBox((400,390))
         
-        self.camera = camera.Camera(self.screen, (600, 500))
+        self.camera = camera.Camera(self.screen, (2000, 2000))
         self.camera.set_target(self.box)
         self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
         
@@ -114,7 +132,7 @@ class Example:
             
             # Then we process the keys detected by handle keyboard
             self.__gameControl()
-            
+            self.__check_collisions()
             # Update everything
             #layer1.update()
             #layer2.update()
@@ -146,6 +164,11 @@ class Example:
             print 'Hello'
         if self.input.lookup(EXIT): 
             exit(0)
+            
+    def __check_collisions(self):
+        for obj in self.gblocks:
+            if collisions.check(self.box, obj):
+                print id(obj), 'Mierrrda'
         
 if __name__=="__main__":
     ex=Example()
