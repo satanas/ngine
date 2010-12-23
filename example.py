@@ -111,12 +111,12 @@ class Example:
         layer1 = pygame.sprite.Group()
         layer2 = pygame.sprite.Group()
         self.gblocks = pygame.sprite.Group()
-        all = pygame.sprite.Group()
+        self.all = pygame.sprite.Group()
         
-        Box.containers = all, layer1
-        DeadBox.containers = all, layer2
-        particles.Particle.containers = all, layer2
-        Block.containers = all, layer2, self.gblocks
+        Box.containers = self.all, layer1
+        DeadBox.containers = self.all, layer2
+        particles.Particle.containers = self.all, layer2
+        Block.containers = self.all, layer2, self.gblocks
         
         self.box=Box()
         DeadBox((0,0))
@@ -134,18 +134,18 @@ class Example:
         self.camera.set_target(self.box)
         self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
         
-        font = pygame.font.Font(None, 16)
+        self.font = pygame.font.Font(None, 16)
         
         while True:
             self.clock.tick(60)
             
             # Then we process the keys detected by handle keyboard
-            self.__gameControl()
+            self.__game_control()
             self.__check_collisions()
             # Update everything
             #layer1.update()
             #layer2.update()
-            all.update()
+            self.all.update()
             self.camera.update()
             self.camera.draw_groups([layer2, layer1])
             
@@ -157,24 +157,10 @@ class Example:
             elif self.effect == 4:
                 particles.ParticlesBoost(pygame.mouse.get_pos(), 180, 2, 
                                          particles=50)
-                
-            if self.effect == 0: 
-                text = font.render('Effect: Explosion', 1, (255,255,255))
-            elif self.effect == 1: 
-                text = font.render('Effect: Fireworks', 1, (255,255,255))
-            elif self.effect == 2: 
-                text = font.render('Effect: Shock', 1, (255,255,255))
-            elif self.effect == 3: 
-                text = font.render('Effect: Trace', 1, (255,255,255))
-            elif self.effect == 4: 
-                text = font.render('Effect: Boost', 1, (255,255,255))
-            inst = font.render('Click on the screen to see the effect. Right click to change it', 1, (255,255,255))
-            self.screen.blit(inst, (150,440))
-            self.screen.blit(text, (250,460))
-            
+            self.__text_on_screen()
             pygame.display.flip()
             
-    def __gameControl(self):
+    def __game_control(self):
         # We call the handle keyboard method
         self.input.handle_input()
         
@@ -215,5 +201,27 @@ class Example:
             if collisions.check(self.box, obj):
                 obj.collide(self.box)
         
+    def __text_on_screen(self):
+        fps = str(int(self.clock.get_fps ()))
+        obj_count = str(len(self.all))
+        info1 = self.font.render('FPS: ' + fps, 1, (255,255,255))
+        info2 = self.font.render('Objects: ' + obj_count, 1, (255,255,255))
+        self.screen.blit(info1, (10, 10))
+        self.screen.blit(info2, (10, 20))
+        
+        if self.effect == 0: 
+            text = self.font.render('Effect: Explosion', 1, (255,255,255))
+        elif self.effect == 1: 
+            text = self.font.render('Effect: Fireworks', 1, (255,255,255))
+        elif self.effect == 2: 
+            text = self.font.render('Effect: Shock', 1, (255,255,255))
+        elif self.effect == 3: 
+            text = self.font.render('Effect: Trace', 1, (255,255,255))
+        elif self.effect == 4: 
+            text = self.font.render('Effect: Boost', 1, (255,255,255))
+        inst = self.font.render('Click on the screen to see the effect. Right click to change it', 1, (255,255,255))
+        self.screen.blit(inst, (150,440))
+        self.screen.blit(text, (250,460))
+    
 if __name__=="__main__":
     ex=Example()
