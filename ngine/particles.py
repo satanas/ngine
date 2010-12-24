@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #===================================================
 # 
-# A module to generate a wide type of particles (explosions, blasts, boosts)
+# Generate a wide type of particles (explosions, blasts, boosts)
 #
 # Copyright (C) 2010 Wil Alvarez <wil.alejandro@gmail.com>
 #

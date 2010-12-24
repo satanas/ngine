@@ -16,16 +16,27 @@ class FontHandler:
     def __init__(self):
         pygame.font.init()
         self.__files = {}
-        
+    '''
     def load(self, fonts):
         for filename in fonts:
             key = filename.split('.')[0]
             filepath = tools.get_datafile_path('fonts', filename)
             self.__files[key] = filepath
+    '''
+    def load(self, filename, size, color, bold=False):
+        key = filename.split('.')[0]
+        filepath = tools.get_datafile_path('fonts', filename)
+        self.__files[key] = [pygame.font.Font(filepath, size), color, bold]
+            
+    def load_default(self, key, size, color, bold=False):
+        self.__files[key] = [pygame.font.Font(None, size), color, bold]
     
-    def rendertext(self, key, text, color, bold=False):
+    def render(self, key, text):
         try:
-            font = pygame.font.Font(self.__files[key], size)
+            font = self.__files[key][0]
+            color = self.__files[key][1]
+            bold = self.__files[key][2]
+            
             if bold: 
                 font.set_bold(1)
             

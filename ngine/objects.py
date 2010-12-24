@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #===================================================
 # 
-# Holds a variety of game objects
+# Holds the very basic game objects
 #
 # Copyright (C) 2010 Wil Alvarez <wil.alejandro@gmail.com>
 #

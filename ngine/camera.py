@@ -4,20 +4,7 @@
 # camera.py - A module that let you create a 2D side-scrolling camera with some
 # optimizations
 #
-# Copyright (C) 2008  Wil Alvarez <wil_alejandro@yahoo.com>
-#
-# This PACKAGE is free software; you can redistribute it and/or modify it under
-# the terms of the GNU General Public License as published by the Free Software 
-# Foundation; either version 3 of the License, or (at your option) any later
-# version.
-# This PACKAGE is distributed in the hope that it will be useful, but WITHOUT 
-# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
-# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
-# for more details.
-#
-# You should have received a copy of the GNU General Public License along with 
-# this PACKAGE (see COPYING); if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+# Copyright (C) 2008 - 2010  Wil Alvarez <wil.alejandro@gmail.com>
 #
 #===================================================
 
@@ -138,20 +125,15 @@ class Camera:
         
     def set_backgrounds(self, bg1=None, bg2=None, bg3=None):
         if bg1: 
-            #self.bg1 = loadpng(bg1)
             key = bg1.split('.')[0]
-            print 'key1', key
             self.bgh.load([bg1])
             self.bg1 = self.bgh.get(key)
         if bg2:
             key = bg2.split('.')[0]
-            print 'key2', key
             self.bgh.load([bg2])
             self.bg2 = ScrollingImage(self.screen, self.bgh.get(key), -5, (0,0))
         if (bg3 is not None): 
-            #self.bg3 = loadpng(bg3)
             key = bg3.split('.')[0]
-            print 'key3', key
             self.bgh.load([bg3])
             self.bg3 = self.bgh.get(key)
         
@@ -159,7 +141,7 @@ class Camera:
         """ Used to set the target that camera must follow"""
         self.target = sprite
         self.unlock(pan)
-
+    
     def clear_target(self):
         """ Used to clear the target sprite """
         self.target = None

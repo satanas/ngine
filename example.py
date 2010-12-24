@@ -77,7 +77,7 @@ class Block(objects.Actor, objects.UnwalkableObject):
 class Example:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption('Camera Example')
+        pygame.display.set_caption('Ngine Example')
         self.screen = pygame.display.set_mode((640, 480))
         self.clock = pygame.time.Clock()
         
@@ -131,7 +131,7 @@ class Example:
         self.target3=DeadBox((400,390))
         
         self.camera = camera.Camera(self.screen, (2000, 2000))
-        self.camera.set_target(self.box)
+        #self.camera.set_target(self.box)
         self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
         
         self.font = pygame.font.Font(None, 16)

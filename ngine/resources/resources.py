@@ -18,12 +18,8 @@ from ngine.resources import background
 
 class Resources:
     def __init__(self):
-        pygame.mixer.init()
-        pygame.font.init()
-        pygame.display.init()
-        
-        self.music = MusicHandler()
-        self.sound = SoundHandler()
-        self.image = ImageHandler()
-        self.font = FontHandler()
-        self.bg = BackgroundHandler()
+        self.music = music.MusicHandler()
+        self.sound = sound.SoundHandler()
+        self.image = image.ImageHandler()
+        self.font = font.FontHandler()
+        self.bg = background.BackgroundHandler()

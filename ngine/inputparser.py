@@ -1,25 +1,12 @@
 # -*- coding: utf-8 -*-
 #===================================================
 # 
-# input.py - a simple library to bind standard input into user defined actions 
+# A simple library to bind standard input into user defined actions 
 # to be used in pygame applications
 #
 # Copyright (C) 2008 - 2010  Wil Alvarez <wil.alejandro@gmail.com>
 #
 #===================================================
-#
-# Nov 20, 2008 - Wil Alvarez:
-#   + Added support for documentation in pydoc format
-#   + Added support UP and DOWN events for keys and joystick buttons
-#   + Improved support for mouse move and quit events
-#
-# Sep 17, 2008 - Wil Alvarez:
-#   + Changed format to complaint with python standard (indentation, underscore
-#   separation for method name, etc)
-#
-# May 4, 2008 - Wil Alvarez: 
-#   + Implemented mouse down/up events
-#   + Added support for QUIT event
 
 import pygame
 
@@ -29,6 +16,10 @@ KEY_DOWN = pygame.KEYDOWN
 MOUSE_MOTION = pygame.MOUSEMOTION
 MOUSE_BUTTON_UP = pygame.MOUSEBUTTONUP
 MOUSE_BUTTON_DOWN = pygame.MOUSEBUTTONDOWN
+
+MOUSE_LEFT_BUTTON = 1
+MOUSE_MIDDLE_BUTTON = 2
+MOUSE_RIGHT_BUTTON = 3
 
 JOY_BUTTON_UP = pygame.JOYBUTTONUP
 JOY_BUTTON_DOWN = pygame.JOYBUTTONDOWN
