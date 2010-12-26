@@ -8,10 +8,11 @@
 #
 #===================================================
 
+import math
 import pygame
 
-PROXIMITY = 16 # Maximum value to consider if a sprite is near the target
-BG_COLOR = (0,0,0)
+from ngine import collisions
+from ngine.resources import background
 
 # Alignment Constants
 CENTER = 0x11
@@ -28,11 +29,13 @@ SLOW_PAN_STEP = 6
 MID_PAN_STEP = 12
 FAST_PAN_STEP = 24
 
-from ngine.resources import background
-
 class Camera:
-    def __init__(self, screen, world_size, bg_color=None):
+    def __init__(self, screen, world_size, bg_color=(0,0,0)):
         self.rect = pygame.Rect(0, 0, screen.get_width(), screen.get_height())
+        self.old_rect = pygame.Rect(0, 0, screen.get_width(), screen.get_height())
+        w = self.rect.width / 2
+        h = self.rect.height / 2
+        self.radius = math.sqrt(pow(w, 2) + pow(h, 2))
         self.screen = screen
         self.target = None
         self.world_size = world_size
@@ -42,40 +45,20 @@ class Camera:
         self.pan_speed = SLOW_PAN_STEP
         self.locked = False
         self.last_target_pos = (0,0)
-        global BG_COLOR
-        if (bg_color is not None): BG_COLOR = bg_color
+        self.bg_color = bg_color
         
-        self.bg1 = None
-        self.bg2 = None
-        self.bg3 = None
-        self.bgh = background.BackgroundHandler()
-        
-    def __watch_edges(self, rect):
+    def __watch_edges(self):
         # Watching for the world edges
-        if (rect.top < 0): 
-            rect.top = 0
-        elif (rect.top > self.world_size[1]-rect.h): 
-            rect.top = self.world_size[1]-rect.h
+        if (self.rect.top < 0): 
+            self.rect.top = 0
+        elif (self.rect.top > self.world_size[1] - self.rect.h): 
+            self.rect.top = self.world_size[1] - self.rect.h
             
-        if (rect.left < 0): 
-            rect.left = 0
-        elif (rect.left > self.world_size[0]-rect.w): 
-            rect.left = self.world_size[0]-rect.w
-        
-        return rect
-        
-    def __update_bgs(self, updatebg2):
-        self.clear()
-        
-        if (self.bg1 is not None): 
-            self.screen.blit(self.bg1, (0,0))
-        if (self.bg2 is not None and updatebg2): 
-            self.bg2.scroll()
-        elif (self.bg2 is not None and not updatebg2): 
-            self.bg2.update()
-        if (self.bg3 is not None): 
-            self.screen.blit(self.bg3, (0,0), self.rect)
-        
+        if (self.rect.left < 0): 
+            self.rect.left = 0
+        elif (self.rect.left > self.world_size[0] - self.rect.w): 
+            self.rect.left = self.world_size[0] - self.rect.w
+    
     def lock(self):
         self.locked = True
         
@@ -122,21 +105,7 @@ class Camera:
             testrect.topleft = (self.rect.left + dx, self.rect.top + dy)
             testrect = self.__watch_edges(testrect)
             self.rect.topleft = testrect.topleft
-        
-    def set_backgrounds(self, bg1=None, bg2=None, bg3=None):
-        if bg1: 
-            key = bg1.split('.')[0]
-            self.bgh.load([bg1])
-            self.bg1 = self.bgh.get(key)
-        if bg2:
-            key = bg2.split('.')[0]
-            self.bgh.load([bg2])
-            self.bg2 = ScrollingImage(self.screen, self.bgh.get(key), -5, (0,0))
-        if (bg3 is not None): 
-            key = bg3.split('.')[0]
-            self.bgh.load([bg3])
-            self.bg3 = self.bgh.get(key)
-        
+    
     def set_target(self, sprite, pan=False):
         """ Used to set the target that camera must follow"""
         self.target = sprite
@@ -145,34 +114,15 @@ class Camera:
     def clear_target(self):
         """ Used to clear the target sprite """
         self.target = None
-        
+    
     def is_on_screen(self, sprite):
-        """This is used mainly to check collisions just when sprite is on 
-        screen"""
-        return self.rect.colliderect(sprite.rect)
-        
-    def is_near_target(self, sprite):
-        """ Verify is a sprite is near the target (according to proximity 
-        value) """
-        if self.target==None: return False
-        
-        proxrect = pygame.Rect(0,0, self.target.rect.width+PROXIMITY, 
-            self.target.rect.height+PROXIMITY)
-        proxrect.center = self.target.rect.center
-        
-        return proxrect.colliderect(sprite.rect)
-        
-    def is_near_sprite(self, sprite1, sprite2):
-        """ Verify is sprite1 is near sprite2 (according to proximity 
-        value) """
-        proxrect = pygame.Rect(0,0, sprite1.rect.width+PROXIMITY, 
-            sprite1.rect.height+PROXIMITY)
-        proxrect.center = sprite1.rect.center
-        
-        return proxrect.colliderect(sprite2.rect)
+        """This is used mainly to draw just when sprite is on screen"""
+        return collisions.check(self, sprite)
         
     def update(self):
         updatebg2 = False
+        self.old_rect.topleft = self.rect.topleft
+        
         # If camera is fixed it won't move
         if self.locked:
             pass
@@ -224,41 +174,25 @@ class Camera:
                     (self.rect.top == self.pan_pos[1]): 
                     self.panning=False
         # Normal movement
-        elif (self.target is not None) and \
-            (self.last_target_pos != self.target.rect.center):
+        elif self.target and self.last_target_pos != self.target.rect.center:
             self.last_target_pos = self.target.rect.center
             self.rect.center = self.target.rect.center
             updatebg2 = True
-        
-        self.rect = self.__watch_edges(self.rect)
-        self.__update_bgs(updatebg2)
+            
+        self.__watch_edges()
+        return self.rect.left != self.old_rect.left and updatebg2
         
     def clear(self):
-        self.screen.fill(BG_COLOR)
-
+        self.screen.fill(self.bg_color)
+    
+    def draw_background(self, image):
+        self.screen.blit(image, (0,0))
+    
     def draw_groups(self, groups_list):
         for group in groups_list:
             for s in group.sprites():
                 if self.is_on_screen(s):
-                    self.screen.blit(s.image, (s.rect.left-self.rect.left, 
-                        s.rect.top-self.rect.top, s.rect.width, s.rect.height))
-
-class ScrollingImage:
-    def __init__(self, screen, picture, speed, pos):
-        self.screen = screen
-        self.speed = speed
-        self.image = picture
-        rect = self.image.get_rect()
-        self.size = (rect.width, rect.height)
-        self.pos = pos
-        self.offset = 0
-        
-    def scroll(self):
-        self.screen.blit(self.image, (self.offset, self.pos[1]))
-        self.screen.blit(self.image, (self.offset+self.size[0], self.pos[1]))
-        self.offset += self.speed
-        if (self.offset < -self.size[0]): self.offset=0
-
-    def update(self):
-        self.screen.blit(self.image, (self.offset, self.pos[1]))
-        self.screen.blit(self.image, (self.offset+self.size[0], self.pos[1]))
+                    x = s.rect.left-self.rect.left
+                    y = s.rect.top-self.rect.top
+                    self.screen.blit(s.image, (x, y, s.rect.width, s.rect.height))
+    

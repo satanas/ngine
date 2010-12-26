@@ -23,6 +23,9 @@ class DummyScene(scene.Scene):
         scene.Scene.__init__(self, director, _input, gamedata)
         
     def _on_load(self):
+        self.res.font.load_default('__default__', 16, (255,255,255))
+        self.res.bg.load(['bg1.png', 'bg2.png'])
+        
         self.effect = 0
         
         self.layer1 = pygame.sprite.Group()
@@ -49,17 +52,18 @@ class DummyScene(scene.Scene):
         
         self.camera.world_size = (2000, 2000)
         self.camera.set_target(self.box)
-        self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
-        
-        self.res.font.load_default('__default__', 16, (255,255,255))
+        #self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
+        self.set_backgrounds(bg3='bg1', bg2='bg2')
         
     def handle_events(self):
         self._input.handle_input()
         
         if self._input.lookup(LEFT): 
             self.box.move(-1,0)
+            self.cbg.scroll(-self.box.xspeed)
         if self._input.lookup(RIGHT): 
             self.box.move(1,0)
+            self.cbg.scroll(self.box.xspeed)
         if self._input.lookup(UP): 
             self.box.move(0,-1)
         if self._input.lookup(DOWN): 
@@ -97,9 +101,12 @@ class DummyScene(scene.Scene):
                 
     def update(self):
         self.all.update()
-        self.camera.update()
+        scroll = self.camera.update()
+        self.cbg.update(scroll)
         
     def draw(self):
+        self.cbg.draw()
+        self.camera.draw_background(self.cbg.image)
         self.camera.draw_groups([self.layer2, self.layer1])
         
         if self.effect == 3:
