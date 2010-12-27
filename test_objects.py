@@ -40,9 +40,9 @@ class DeadBox(objects.SpriteObject):
         
 # A class that represent a little square box on screen
 class Block(objects.Actor, objects.UnwalkableObject):
-    def __init__(self, pos):
+    def __init__(self, pos, top, bottom, left, right):
         objects.Actor.__init__(self)
-        objects.UnwalkableObject.__init__(self, True, True, True, True)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
         
         image = pygame.Surface((32, 32))
         image.fill((255,255,0))

@@ -34,7 +34,6 @@ class TileHandler:
             for j in range(tile_width):
                 index = (j + i) + ((tile_width -1) * i) + 1
                 hindex = "%02d" % index
-                print hindex, j * tile_size[0], i * tile_size[1]
                 tile = tools.get_image_at(self.tileset, j * tile_size[0], 
                     i * tile_size[1], tile_size[0], tile_size[1])
                 self.__tiles[hindex] = tile

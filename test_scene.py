@@ -25,6 +25,12 @@ class DummyScene(scene.Scene):
     def _load_map(self, filename):
         self.maploader.load(filename)
         
+        for row in self.maploader.layers['blocks']:
+            for block in row:
+                if block.t_id == '01':
+                    tb, bb, lb, rb = self.maploader.get_collide_bounds(block.x, block.y)
+                    Block((block.real_x, block.real_y), tb, bb, lb, rb)
+        
         for event in self.maploader.events:
             if event.e_id == 'box':
                 self.box = Box((event.x, event.y))

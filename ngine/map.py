@@ -20,7 +20,7 @@ class MapLoader:
             'background': None,
             'scrolling': None,
             'decorations': None,
-            'unwalkable': None,
+            'blocks': None,
         }
         self.width = 0
         self.height = 0
@@ -84,19 +84,24 @@ class MapLoader:
             row = fd.readline().strip().split(' ')
             self.layers['decorations'].data.append(row)
         
-    def __process_unwalkable(self, fd):
-        self.layers['unwalkable'] = Layer()
+    def __process_blocks(self, fd):
+        self.layers['blocks'] = []
         for i in range(self.height):
-            row = fd.readline().strip().split(' ')
-            self.layers['unwalkable'].data.append(row)
+            line = fd.readline().strip().split(' ')
+            row = []
+            for j in range(len(line)):
+                block = Tile(line[j], j, i, self.tilewidth, self.tileheight)
+                row.append(block)
+            self.layers['blocks'].append(row)
     
     def __process_events(self, fd):
-        event = fd.readline().strip()
+        event = fd.readline()
         while event != '':
+            event = event.strip()
             self.events.append(Event(event.split()[0], 
                 int(event.split()[1]) * self.tilewidth,
                 int(event.split()[2]) * self.tileheight))
-            event = fd.readline().strip()
+            event = fd.readline()
         
     def load(self, filename):
         filepath = tools.get_datafile_path('maps', filename)
@@ -118,40 +123,43 @@ class MapLoader:
             header = header.strip()
             if header == '[background]':
                 self.__process_background(fd)
-            elif header == '[scrolling]':
-                self.__process_scrolling(fd)
             elif header == '[decorations]':
                 self.__process_decorations(fd)
-            elif header == '[unwalkable]':
-                self.__process_unwalkable(fd)
+            elif header == '[scrolling]':
+                self.__process_scrolling(fd)
+            elif header == '[blocks]':
+                self.__process_blocks(fd)
+            elif header == '[items]':
+                pass
+            elif header == '[characters]':
+                pass
             elif header == '[events]':
                 self.__process_events(fd)
-            print header
             fd.readline()
             header = fd.readline()
         
     def get_collide_bounds(self, x, y):
         try:
-            top = True if self.layers['unwalkable'].data[y - 1][x] == '.' else False
+            top = True if self.layers['blocks'][y - 1][x].t_id == '00' else False
         except:
             top = False
         
         try:
-            bottom = True if self.layers['unwalkable'].data[y + 1][x] == '.' else False
+            bottom = True if self.layers['blocks'][y + 1][x].t_id == '00' else False
         except:
             bottom = False
             
         try:
-            left = True if self.layers['unwalkable'].data[y][x - 1] == '.' else False
+            left = True if self.layers['blocks'][y][x - 1].t_id == '00' else False
         except:
             left = False
             
         try:
-            right = True if self.layers['unwalkable'].data[y][x + 1] == '.' else False
+            right = True if self.layers['blocks'][y][x + 1].t_id == '00' else False
         except:
             right = False
         
-        return top, right, bottom, left
+        return top, bottom, left, right
         
     def get_tile_size(self):
         return self.tilewidth, self.tileheight
@@ -167,6 +175,24 @@ class Layer:
         self.tilesetwidth = 0
         self.tilesetheight = 0
 
+class Tile:
+    def __init__(self, t_id, x, y, tilewidth, tileheight):
+        self.t_id = t_id
+        self.x = x
+        self.y = y
+        self.real_x = x * tilewidth
+        self.real_y = y * tileheight
+        self.top = False
+        self.right = False
+        self.bottom = False
+        self.left = False
+        
+    def set_collide_bounds(self, top, bottom, left, right):
+        self.top = top
+        self.bottom = bottom
+        self.left = left
+        self.right = right
+        
 class Event:
     ''' This class load events in full size coords '''
     def __init__(self, e_id, ex, ey):
