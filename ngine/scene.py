@@ -10,6 +10,7 @@
 
 import pygame
 
+from ngine import map
 from ngine import camera
 from ngine import resources
 
@@ -22,6 +23,7 @@ class Scene:
         self.camera =  camera.Camera(director.screen, gamedata.screen_res)
         self.cbg = CompositedBackground(gamedata.screen_res)
         self.screen = director.screen
+        self.maploader = map.MapLoader()
         
     def _fade_in(self):
         pass
@@ -30,8 +32,6 @@ class Scene:
         pass
         
     def set_backgrounds(self, bg1=None, bg2=None, bg3=None):
-        if bg1:
-            bg1 = self.res.bg.get(bg1)
         if bg2:
             bg2 = self.res.bg.get(bg2)
         if bg3:

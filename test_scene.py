@@ -22,12 +22,18 @@ class DummyScene(scene.Scene):
     def __init__(self, director, _input, gamedata):
         scene.Scene.__init__(self, director, _input, gamedata)
         
+    def _load_map(self, filename):
+        self.maploader.load(filename)
+        
+        for event in self.maploader.events:
+            if event.e_id == 'box':
+                self.box = Box((event.x, event.y))
+            elif event.e_id == 'deadbox':
+                DeadBox((event.x, event.y))
+            elif event.e_id == 'block':
+                Block((event.x, event.y))
+        
     def _on_load(self):
-        self.res.font.load_default('__default__', 16, (255,255,255))
-        self.res.bg.load(['bg1.png', 'bg2.png'])
-        
-        self.effect = 0
-        
         self.layer1 = pygame.sprite.Group()
         self.layer2 = pygame.sprite.Group()
         self.gblocks = pygame.sprite.Group()
@@ -38,22 +44,25 @@ class DummyScene(scene.Scene):
         particles.Particle.containers = self.all, self.layer2
         Block.containers = self.all, self.layer2, self.gblocks
         
-        self.box = Box()
-        DeadBox((0,0))
-        DeadBox((100,100))
-        DeadBox((70,70))
-        Block((200,20))
+        self._load_map('01.map')
+        
+        self.res.font.load_default('__default__', 16, (255,255,255))
+        self.res.bg.load(['bg1.png', 'bg2.png'])
+        #self.res.tile.load('mud-tile-example.png', self.maploader.get_tile_size())
+        
+        self.effect = 0
+        '''
         for i in range(100):
             x = random.randint(30, 1950)
             y = random.randint(30, 1950)
             Block((x,y))
         self.target2 = DeadBox((200,200))
         self.target3 = DeadBox((400,390))
-        
+        '''
         self.camera.world_size = (2000, 2000)
         self.camera.set_target(self.box)
-        #self.camera.set_backgrounds(bg2='bg1.png', bg3='bg3.png')
-        self.set_backgrounds(bg3='bg1', bg2='bg2')
+        #self.set_backgrounds(bg3='bg1', bg2='bg2')
+        self.set_backgrounds(bg1=self.maploader.layers['background'])
         
     def handle_events(self):
         self._input.handle_input()
@@ -68,12 +77,12 @@ class DummyScene(scene.Scene):
             self.box.move(0,-1)
         if self._input.lookup(DOWN): 
             self.box.move(0,1)
-        if self._input.lookup(ACTION1): 
-            self.camera.pan_to_pos(self.target2.rect.center)
-        if self._input.lookup(ACTION2): 
-            self.camera.move_to_pos(self.target3.rect.topleft, camera.TOPLEFT)
-        if self._input.lookup(ACTION3): 
-            self.camera.move_to_rel(2,0)
+        #if self._input.lookup(ACTION1): 
+        #    self.camera.pan_to_pos(self.target2.rect.center)
+        #if self._input.lookup(ACTION2): 
+        #    self.camera.move_to_pos(self.target3.rect.topleft, camera.TOPLEFT)
+        #if self._input.lookup(ACTION3): 
+        #    self.camera.move_to_rel(2,0)
         if self._input.lookup(BUTTON1):
             if pygame.mouse.get_pos()[0] > 640/2: 
                 dir = 270

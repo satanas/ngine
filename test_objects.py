@@ -14,12 +14,12 @@ from ngine import objects
 
 # A class that represent a little square box on screen
 class Box(objects.Actor):
-    def __init__(self):
+    def __init__(self, pos):
         objects.Actor.__init__(self)
         
         image = pygame.Surface((32, 32))
         image.fill((255,0,0))
-        self.set_image(image, (120, 120))
+        self.set_image(image, pos)
         self.xspeed = 2
         self.yspeed = 2
         
@@ -36,7 +36,7 @@ class DeadBox(objects.SpriteObject):
         
         image = pygame.Surface((32, 32))
         image.fill((0,0,255))
-        self.set_image(image, (120, 120))
+        self.set_image(image, pos)
         
 # A class that represent a little square box on screen
 class Block(objects.Actor, objects.UnwalkableObject):
