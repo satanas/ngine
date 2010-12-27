@@ -25,16 +25,19 @@ class DummyScene(scene.Scene):
     def _load_map(self, filename):
         self.maploader.load(filename)
         
-        for row in self.maploader.layers['blocks']:
+        for row in self.maploader.layers['unwalkable']:
             for block in row:
                 if block.t_id == '01':
                     tb, bb, lb, rb = self.maploader.get_collide_bounds(block.x, block.y)
                     Block((block.real_x, block.real_y), tb, bb, lb, rb)
         
+        for row in self.maploader.layers['characters']:
+            for char in row:
+                if char.t_id == '01':
+                    self.box = Box((char.real_x, char.real_y))
+        
         for event in self.maploader.events:
-            if event.e_id == 'box':
-                self.box = Box((event.x, event.y))
-            elif event.e_id == 'deadbox':
+            if event.e_id == 'deadbox':
                 DeadBox((event.x, event.y))
             elif event.e_id == 'block':
                 Block((event.x, event.y))
@@ -54,7 +57,6 @@ class DummyScene(scene.Scene):
         
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png'])
-        #self.res.tile.load('mud-tile-example.png', self.maploader.get_tile_size())
         
         self.effect = 0
         '''

@@ -20,7 +20,9 @@ class MapLoader:
             'background': None,
             'scrolling': None,
             'decorations': None,
-            'blocks': None,
+            'unwalkable': None,
+            'items': None,
+            'characters': None,
         }
         self.width = 0
         self.height = 0
@@ -47,8 +49,8 @@ class MapLoader:
         htile = tile.TileHandler()
         htile.load(tilename, self.get_tile_size(), (tsw, tsh))
         
-        image = pygame.Surface(self.get_size())
-        image.fill(self.bgcolor)
+        self.layers['background'] = pygame.Surface(self.get_size())
+        self.layers['background'].fill(self.bgcolor)
         
         for i in range(self.height):
             row = fd.readline().strip().split(' ')
@@ -57,42 +59,53 @@ class MapLoader:
                     continue
                 x_pos = j * self.tilewidth
                 y_pos = i * self.tileheight
-                image.blit(htile.get(row[j]), 
+                self.layers['background'].blit(htile.get(row[j]), 
                     (x_pos, y_pos, self.tilewidth, self.tileheight), 
                     (0, 0, self.tilewidth, self.tileheight))
         
-        self.layers['background'] = image
+    def __process_decorations(self, fd):
+        tilename = self.__get_str_val(fd)
+        tsw = self.__get_int_val(fd)
+        tsh = self.__get_int_val(fd)
+        
+        htile = tile.TileHandler()
+        htile.load(tilename, self.get_tile_size(), (tsw, tsh))
+        
+        for i in range(self.height):
+            row = fd.readline().strip().split(' ')
+            for j in range(len(row)):
+                if row[j] == '00': 
+                    continue
+                x_pos = j * self.tilewidth
+                y_pos = i * self.tileheight
+                self.layers['background'].blit(htile.get(row[j]), 
+                    (x_pos, y_pos, self.tilewidth, self.tileheight), 
+                    (0, 0, self.tilewidth, self.tileheight))
         
     def __process_scrolling(self, fd):
         self.layers['scrolling'] = Layer()
         filename = fd.readline().split(' = ')[1]
         self.image = tools.get_datafile_path('images', filename)
         
-    def __process_decorations(self, fd):
-        self.layers['decorations'] = Layer()
-        
-        tilename = fd.readline().split(' = ')[1]
-        tilepath = tools.get_datafile_path('images', tilename)
-        tsw = int(fd.readline().split(' = ')[1])
-        tsh = int(fd.readline().split(' = ')[1])
-        
-        self.layers['decorations'].tileset = tilepath
-        self.layers['decorations'].tilesetwidth = tsw
-        self.layers['decorations'].tilesetheight = tsh
-        
-        for i in range(self.height):
-            row = fd.readline().strip().split(' ')
-            self.layers['decorations'].data.append(row)
-        
-    def __process_blocks(self, fd):
-        self.layers['blocks'] = []
+    def __process_unwalkable(self, fd):
+        self.layers['unwalkable'] = []
         for i in range(self.height):
             line = fd.readline().strip().split(' ')
             row = []
             for j in range(len(line)):
                 block = Tile(line[j], j, i, self.tilewidth, self.tileheight)
                 row.append(block)
-            self.layers['blocks'].append(row)
+            self.layers['unwalkable'].append(row)
+    
+    def __process_characters(self, fd):
+        self.layers['characters'] = []
+        for i in range(self.height):
+            line = fd.readline().strip().split(' ')
+            row = []
+            for j in range(len(line)):
+                char = Tile(line[j], j, i, self.tilewidth, self.tileheight)
+                row.append(char)
+            self.layers['characters'].append(row)
     
     def __process_events(self, fd):
         event = fd.readline()
@@ -127,12 +140,12 @@ class MapLoader:
                 self.__process_decorations(fd)
             elif header == '[scrolling]':
                 self.__process_scrolling(fd)
-            elif header == '[blocks]':
-                self.__process_blocks(fd)
+            elif header == '[unwalkable]':
+                self.__process_unwalkable(fd)
             elif header == '[items]':
                 pass
             elif header == '[characters]':
-                pass
+                self.__process_characters(fd)
             elif header == '[events]':
                 self.__process_events(fd)
             fd.readline()
@@ -140,22 +153,22 @@ class MapLoader:
         
     def get_collide_bounds(self, x, y):
         try:
-            top = True if self.layers['blocks'][y - 1][x].t_id == '00' else False
+            top = True if self.layers['unwalkable'][y - 1][x].t_id == '00' else False
         except:
             top = False
         
         try:
-            bottom = True if self.layers['blocks'][y + 1][x].t_id == '00' else False
+            bottom = True if self.layers['unwalkable'][y + 1][x].t_id == '00' else False
         except:
             bottom = False
             
         try:
-            left = True if self.layers['blocks'][y][x - 1].t_id == '00' else False
+            left = True if self.layers['unwalkable'][y][x - 1].t_id == '00' else False
         except:
             left = False
             
         try:
-            right = True if self.layers['blocks'][y][x + 1].t_id == '00' else False
+            right = True if self.layers['unwalkable'][y][x + 1].t_id == '00' else False
         except:
             right = False
         
