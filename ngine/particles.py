@@ -8,7 +8,6 @@
 # Created at: Dic 23, 2010
 #===================================================
 
-import os
 import math
 import pygame
 import random
@@ -82,6 +81,9 @@ class Particle(pygame.sprite.Sprite):
         self.image.fill(self.init_color)
         self.rect = self.image.get_rect(center = pos)
         self.x, self.y = self.rect.center
+        w = self.rect.width / 2
+        h = self.rect.height / 2
+        self.radius = math.sqrt(pow(w, 2) + pow(h, 2))
         
     def interp_color(self):
         tmpcolor=[]
