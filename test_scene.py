@@ -22,7 +22,7 @@ class DummyScene(scene.Scene):
     def __init__(self, director, _input, gamedata):
         scene.Scene.__init__(self, director, _input, gamedata)
         
-    def _load_map(self, filename):
+    def __load_map(self, filename):
         self.maploader.load(filename)
         
         for row in self.maploader.layers['unwalkable']:
@@ -35,14 +35,15 @@ class DummyScene(scene.Scene):
             for char in row:
                 if char.t_id == '01':
                     self.box = Box((char.real_x, char.real_y))
+                elif char.t_id == '02':
+                    DeadBox((char.real_x, char.real_y))
         
-        for event in self.maploader.events:
-            if event.e_id == 'deadbox':
-                DeadBox((event.x, event.y))
-            elif event.e_id == 'block':
-                Block((event.x, event.y))
+        for row in self.maploader.layers['items']:
+            for item in row:
+                if item.t_id == '01':
+                    ItemBox((item.real_x, item.real_y))
         
-    def _on_load(self):
+    def on_load(self):
         self.layer1 = pygame.sprite.Group()
         self.layer2 = pygame.sprite.Group()
         self.gblocks = pygame.sprite.Group()
@@ -50,41 +51,35 @@ class DummyScene(scene.Scene):
         
         Box.containers = self.all, self.layer1
         DeadBox.containers = self.all, self.layer2
+        ItemBox.containers = self.all, self.layer2
         particles.Particle.containers = self.all, self.layer2
         Block.containers = self.all, self.layer2, self.gblocks
         
-        self._load_map('01.map')
+        self.__load_map('01.map')
         
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png'])
         
         self.effect = 0
-        '''
-        for i in range(100):
-            x = random.randint(30, 1950)
-            y = random.randint(30, 1950)
-            Block((x,y))
-        self.target2 = DeadBox((200,200))
-        self.target3 = DeadBox((400,390))
-        '''
-        self.camera.world_size = (2000, 2000)
-        self.camera.set_target(self.box)
-        #self.set_backgrounds(bg3='bg1', bg2='bg2')
+        self.on_loaded_map()
+        self.append_to_draw(self.layer2)
+        self.append_to_draw(self.layer1)
+        self.set_camera_target(self.box)
         self.set_backgrounds(bg1=self.maploader.layers['background'])
         
     def handle_events(self):
         self._input.handle_input()
         
         if self._input.lookup(LEFT): 
-            self.box.move(-1,0)
-            self.cbg.scroll(-self.box.xspeed)
+            self.box.move(-1, 0)
+            self.scroll_bg(-self.box.xspeed)
         if self._input.lookup(RIGHT): 
-            self.box.move(1,0)
-            self.cbg.scroll(self.box.xspeed)
+            self.box.move(1, 0)
+            self.scroll_bg(self.box.xspeed)
         if self._input.lookup(UP): 
-            self.box.move(0,-1)
+            self.box.move(0, -1)
         if self._input.lookup(DOWN): 
-            self.box.move(0,1)
+            self.box.move(0, 1)
         #if self._input.lookup(ACTION1): 
         #    self.camera.pan_to_pos(self.target2.rect.center)
         #if self._input.lookup(ACTION2): 
@@ -116,16 +111,10 @@ class DummyScene(scene.Scene):
             if collisions.check(self.box, obj):
                 obj.collide(self.box)
                 
-    def update(self):
+    def on_update(self):
         self.all.update()
-        scroll = self.camera.update()
-        self.cbg.update(scroll)
         
-    def draw(self):
-        self.cbg.draw()
-        self.camera.draw_background(self.cbg.image)
-        self.camera.draw_groups([self.layer2, self.layer1])
-        
+    def on_draw(self):
         if self.effect == 3:
             ang = random.randint(-25, 25)
             particles.Particle(pos=pygame.mouse.get_pos(), angle=ang, 

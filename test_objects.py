@@ -20,8 +20,8 @@ class Box(objects.Actor):
         image = pygame.Surface((32, 32))
         image.fill((255,0,0))
         self.set_image(image, pos)
-        self.xspeed = 2
-        self.yspeed = 2
+        self.xspeed = 2.5
+        self.yspeed = 2.5
         
     def moveAbs(self, x, y):
         self.rect.center = (x, y)
@@ -37,7 +37,16 @@ class DeadBox(objects.SpriteObject):
         image = pygame.Surface((32, 32))
         image.fill((0,0,255))
         self.set_image(image, pos)
+
+# A class that represent a little square box on screen
+class ItemBox(objects.SpriteObject):
+    def __init__(self, pos):
+        objects.SpriteObject.__init__(self)
         
+        image = pygame.Surface((32, 32))
+        image.fill((90,20,100))
+        self.set_image(image, pos)
+
 # A class that represent a little square box on screen
 class Block(objects.Actor, objects.UnwalkableObject):
     def __init__(self, pos, top, bottom, left, right):

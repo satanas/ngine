@@ -83,9 +83,8 @@ class MapLoader:
                     (0, 0, self.tilewidth, self.tileheight))
         
     def __process_scrolling(self, fd):
-        self.layers['scrolling'] = Layer()
         filename = fd.readline().split(' = ')[1]
-        self.image = tools.get_datafile_path('images', filename)
+        self.layers['scrolling'] = tools.get_datafile_path('images', filename)
         
     def __process_unwalkable(self, fd):
         self.layers['unwalkable'] = []
@@ -107,6 +106,16 @@ class MapLoader:
                 row.append(char)
             self.layers['characters'].append(row)
     
+    def __process_items(self, fd):
+        self.layers['items'] = []
+        for i in range(self.height):
+            line = fd.readline().strip().split(' ')
+            row = []
+            for j in range(len(line)):
+                item = Tile(line[j], j, i, self.tilewidth, self.tileheight)
+                row.append(item)
+            self.layers['items'].append(row)
+            
     def __process_events(self, fd):
         event = fd.readline()
         while event != '':
@@ -129,6 +138,7 @@ class MapLoader:
         self.tilewidth = self.__get_int_val(fd)
         self.tileheight = self.__get_int_val(fd)
         self.bgcolor = self.__build_color(self.__get_str_val(fd))
+        self.scrolling = self.__get_int_val(fd)
         fd.readline().strip()
         
         header = fd.readline()
@@ -143,7 +153,7 @@ class MapLoader:
             elif header == '[unwalkable]':
                 self.__process_unwalkable(fd)
             elif header == '[items]':
-                pass
+                self.__process_items(fd)
             elif header == '[characters]':
                 self.__process_characters(fd)
             elif header == '[events]':

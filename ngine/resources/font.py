@@ -45,20 +45,3 @@ class FontHandler:
             raise SystemExit, message
         
         return rtext
-            
-            
-            
-            
-            
-            
-	
-	return font.render(text, 1, color)
-	
-def rendertextsha(text, color, shadow_color, font, bold=False, aa=1):
-	'''
-	Returns a rendered font
-	'''
-
-	if bold: font.set_bold(1)
-	
-	return font.render(text, 1, color), font.render(text, 1, shadow_color)
