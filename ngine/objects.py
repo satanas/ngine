@@ -22,11 +22,17 @@ class SpriteObject(pygame.sprite.Sprite):
         self.yspeed = 1
         self.xdir = 0
         self.ydir = 0
+        self.last_xdir = 0
+        self.last_ydir = 0
         self.old_pos = (0, 0)
+        
+        self.anim_frame = 0
+        self.anim_delay = 2
+        self.anim_array = []
         #self.jump_speed = 0
         #self.jumping = False
         
-    def set_image(self, image, position):
+    def set_image(self, image, position=None):
         self.image = image
         self.rect = self.image.get_rect(topleft = position)
         w = self.rect.width / 2
@@ -34,23 +40,53 @@ class SpriteObject(pygame.sprite.Sprite):
         self.radius = math.sqrt(pow(w, 2) + pow(h, 2))
     
     def move(self, xdir, ydir):
+        self.on_move(xdir, ydir)
         self.xdir = xdir
         self.ydir = ydir
+        self.last_xdir = xdir
+        self.last_ydir = ydir
         self.old_pos = self.rect.topleft
         self.rect.move_ip(self.xspeed * xdir, self.yspeed * ydir)
+        self.next_image()
         
+    def set_array(self, images):
+        self.anim_array = images
+    
+    def next_image(self, cyclic=True):
+        limit = len(self.anim_array)
+        index = self.anim_frame / self.anim_delay
+        
+        self.anim_frame += 1
+        if index >= limit: 
+            index = limit - 1
+        
+        self.image = self.anim_array[index]
+        
+        last_frame = False
+        if (self.anim_frame >= (limit * self.anim_delay)):
+            last_frame = True
+            if cyclic:
+                self.anim_frame = 0
+                
+        return last_frame
+        
+    def on_move(self, xdir, ydir):
+        raise NotImplemented
+    
 class FallingObject:
     ''' This checks for the gravity effect '''
-    def __init__(self):
+    def __init__(self, gravity=0.7, max_gravity_speed=13):
         # Jump vars
         self.jump_speed = 0
         self.jumping = False
-    
+        self.gravity = gravity
+        self.max_gravity_speed = max_gravity_speed
+        
     # FIXME: Definir mejor estos valores de gravedad y velocidad de salto
     def check_gravity(self):
         # Gravity and Jumping
-        if self.jump_speed < MAX_GRAVITY_SPEED:
-            self.jump_speed += GRAVITY
+        if self.jump_speed < self.max_gravity_speed:
+            self.jump_speed += self.gravity
         if self.jump_speed >= 4.5:
             self.jumping = True
         self.rect.move_ip(0, self.jump_speed)

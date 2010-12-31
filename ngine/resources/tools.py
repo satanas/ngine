@@ -23,3 +23,9 @@ def get_image_at(orig, x_pos, y_pos, width, height, colorkey=None):
         image.set_colorkey(colorkey, pygame.locals.RLEACCEL)
     image.blit(orig, (0, 0, width, height), (x_pos, y_pos, width, height))
     return image.convert_alpha()
+    
+def flip_images(imgarray):
+    tmp = []
+    for image in imgarray:
+        tmp.append(pygame.transform.flip(image, 1, 0))
+    return tmp

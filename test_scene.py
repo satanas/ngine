@@ -34,7 +34,7 @@ class DummyScene(scene.Scene):
         for row in self.maploader.layers['characters']:
             for char in row:
                 if char.t_id == '01':
-                    self.box = Box((char.real_x, char.real_y))
+                    self.box = ArchMage(self.res, (char.real_x, char.real_y))
                 elif char.t_id == '02':
                     DeadBox((char.real_x, char.real_y))
         
@@ -49,16 +49,17 @@ class DummyScene(scene.Scene):
         self.gblocks = pygame.sprite.Group()
         self.all = pygame.sprite.Group()
         
-        Box.containers = self.all, self.layer1
+        ArchMage.containers = self.all, self.layer1
         DeadBox.containers = self.all, self.layer2
         ItemBox.containers = self.all, self.layer2
         particles.Particle.containers = self.all, self.layer2
         Block.containers = self.all, self.layer2, self.gblocks
         
-        self.__load_map('01.map')
-        
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png'])
+        self.res.image.load(['archmage.png'])
+        
+        self.__load_map('02.map')
         
         self.effect = 0
         self.on_loaded_map()
