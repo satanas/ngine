@@ -27,9 +27,11 @@ class DummyScene(scene.Scene):
         
         for row in self.maploader.layers['unwalkable']:
             for block in row:
+                tb, bb, lb, rb = self.maploader.get_collide_bounds(block.x, block.y)
                 if block.t_id == '01':
-                    tb, bb, lb, rb = self.maploader.get_collide_bounds(block.x, block.y)
                     Block((block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '65':
+                    Tree(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
         
         for row in self.maploader.layers['characters']:
             for char in row:
@@ -54,10 +56,12 @@ class DummyScene(scene.Scene):
         ItemBox.containers = self.all, self.layer2
         particles.Particle.containers = self.all, self.layer2
         Block.containers = self.all, self.layer2, self.gblocks
+        Tree.containers = self.all, self.layer2, self.gblocks
         
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png'])
         self.res.image.load(['archmage.png'])
+        self.res.image.load(['map.bmp'])
         
         self.__load_map('02.map')
         

@@ -100,3 +100,14 @@ class Block(objects.Actor, objects.UnwalkableObject):
         image.fill((255,255,0))
         self.set_image(image, pos)
         self.set_limits()
+        
+class Tree(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 0, 256, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
