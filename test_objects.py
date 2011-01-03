@@ -111,3 +111,117 @@ class Tree(objects.Actor, objects.UnwalkableObject):
         image = tools.get_image_at(orig, 0, 256, 32, 32)
         self.set_image(image, pos)
         self.set_limits()
+
+class WaterWell(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 0, 32, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
+
+class Gravestone(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 32, 256, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
+
+class CrossGravestone(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 64, 256, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
+
+#Fence
+class FenceUpLeftCorner(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 0, 64, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
+
+class FenceUpRightCorner(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 64, 64, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
+
+class FenceBottomLeftCorner(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 0, 128, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
+
+class FenceBottomRightCorner(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 64, 128, 32, 32)
+        self.set_image(image, pos)
+        self.set_limits()
+
+class FenceTopBorder(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 32, 64, 32, 32)
+        self.set_image(image, pos)
+        self.set_relative_rect(32, 20, top=self.rect.top + 6)
+        self.set_limits()
+
+class FenceBottomBorder(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 32, 128, 32, 32)
+        self.set_image(image, pos)
+        self.set_relative_rect(32, 20, top=self.rect.top + 6)
+        self.set_limits()
+
+class FenceLeftBorder(objects.Actor, objects.UnwalkableObject):
+    def __init__(self, res, pos, top, bottom, left, right):
+        objects.Actor.__init__(self)
+        objects.UnwalkableObject.__init__(self, top, bottom, left, right)
+        self.res = res
+        
+        orig = self.res.image.get('map')
+        image = tools.get_image_at(orig, 0, 96, 32, 32)
+        self.set_image(image, pos)
+        self.set_relative_rect(14, 32, left=self.rect.left + 2)
+        self.set_limits()

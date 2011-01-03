@@ -17,6 +17,7 @@ class SpriteObject(pygame.sprite.Sprite):
         
         self.image = None
         self.rect = None
+        self._rect = None
         self.radius = 0
         self.xspeed = 1
         self.yspeed = 1
@@ -35,8 +36,21 @@ class SpriteObject(pygame.sprite.Sprite):
     def set_image(self, image, position=None):
         self.image = image
         self.rect = self.image.get_rect(topleft = position)
-        w = self.rect.width / 2
-        h = self.rect.height / 2
+        self._rect = self.image.get_rect(topleft = position)
+        w = self._rect.width / 2
+        h = self._rect.height / 2
+        self.radius = math.sqrt(pow(w, 2) + pow(h, 2))
+        
+    def set_relative_rect(self, width, height, top=None, left=None):
+        self._rect.width = width
+        self._rect.height = height
+        if top:
+            self._rect.top = top
+        if left:
+            self._rect.left = left
+        
+        w = self._rect.width / 2
+        h = self._rect.height / 2
         self.radius = math.sqrt(pow(w, 2) + pow(h, 2))
     
     def move(self, xdir, ydir):
@@ -122,39 +136,39 @@ class UnwalkableObject:
         self._collide_right = right
         
     def __is_xaligned(self, obj):
-        if obj.rect.right > self.rect.left and obj.rect.left < self.rect.right:
+        if obj.rect.right > self._rect.left and obj.rect.left < self._rect.right:
             return True
         return False
         
     def __is_yaligned(self, obj):
-        if obj.rect.bottom > self.rect.top and obj.rect.top < self.rect.bottom:
+        if obj.rect.bottom > self._rect.top and obj.rect.top < self._rect.bottom:
             return True
         return False
         
     def __in_top_threshold(self, obj):
-        if obj.rect.bottom > self.rect.top and obj.rect.bottom < self.t_limit:
+        if obj.rect.bottom > self._rect.top and obj.rect.bottom < self.t_limit:
             return True
         return False
         
     def __in_bottom_threshold(self, obj):
-        if obj.rect.top < self.rect.bottom and obj.rect.top > self.b_limit:
+        if obj.rect.top < self._rect.bottom and obj.rect.top > self.b_limit:
             return True
         return False
     
     def __in_left_threshold(self, obj):
-        if obj.rect.right > self.rect.left and obj.rect.right < self.l_limit:
+        if obj.rect.right > self._rect.left and obj.rect.right < self.l_limit:
             return True
         return False
-        self.rect.right >= object.rect.left > self.rect.left
+        self._rect.right >= object.rect.left > self._rect.left
         
     def __in_right_threshold(self, obj):
-        if obj.rect.left < self.rect.right and obj.rect.left > self.r_limit:
+        if obj.rect.left < self._rect.right and obj.rect.left > self.r_limit:
             return True
         return False
         
     def __in_unknown_area(self, obj):
-        x_inside = self.r_limit > self.rect.x > self.l_limit
-        y_inside = self.b_limit > self.rect.y > self.t_limit
+        x_inside = self.r_limit > self._rect.x > self.l_limit
+        y_inside = self.b_limit > self._rect.y > self.t_limit
         
         if x_inside and y_inside:
             return True
@@ -164,7 +178,7 @@ class UnwalkableObject:
         if not self.__is_xaligned(object):
             return
         if self.__in_top_threshold(object):
-            object.rect.bottom = self.rect.top
+            object.rect.bottom = self._rect.top
             object.on_collide_top(self)
             #object.landing()
         
@@ -172,7 +186,7 @@ class UnwalkableObject:
         if not self.__is_xaligned(object):
             return
         if self.__in_bottom_threshold(object):
-            object.rect.top = self.rect.bottom
+            object.rect.top = self._rect.bottom
             object.on_collide_bottom(self)
             # stop jump
             
@@ -180,14 +194,14 @@ class UnwalkableObject:
         if not self.__is_yaligned(object):
             return
         if self.__in_left_threshold(object):
-            object.rect.right = self.rect.left
+            object.rect.right = self._rect.left
             object.on_collide_left(self)
         
     def __check_collide_right(self, object):
         if not self.__is_yaligned(object):
             return
         if self.__in_right_threshold(object):
-            object.rect.left = self.rect.right
+            object.rect.left = self._rect.right
             object.on_collide_right(self)
         
     def collide(self, object):
@@ -206,10 +220,10 @@ class UnwalkableObject:
         object.ydir = 0
         
     def set_limits(self):
-        self.t_limit = self.rect.top + 4
-        self.b_limit = self.rect.bottom - 4
-        self.l_limit = self.rect.left + 4
-        self.r_limit = self.rect.right - 4
+        self.t_limit = self._rect.top + 4
+        self.b_limit = self._rect.bottom - 4
+        self.l_limit = self._rect.left + 4
+        self.r_limit = self._rect.right - 4
         
 class Actor(SpriteObject, CollidableObject):
     ''' This class represents the base class for all the character objects; npc

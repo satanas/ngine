@@ -32,6 +32,26 @@ class DummyScene(scene.Scene):
                     Block((block.real_x, block.real_y), tb, bb, lb, rb)
                 elif block.t_id == '65':
                     Tree(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '09':
+                    WaterWell(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '66':
+                    Gravestone(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '67':
+                    CrossGravestone(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '17':
+                    FenceUpLeftCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '19':
+                    FenceUpRightCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '18':
+                    FenceTopBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '33':
+                    FenceBottomLeftCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '34':
+                    FenceBottomBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '35':
+                    FenceBottomRightCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                elif block.t_id == '25':
+                    FenceLeftBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
         
         for row in self.maploader.layers['characters']:
             for char in row:
@@ -57,6 +77,16 @@ class DummyScene(scene.Scene):
         particles.Particle.containers = self.all, self.layer2
         Block.containers = self.all, self.layer2, self.gblocks
         Tree.containers = self.all, self.layer2, self.gblocks
+        WaterWell.containers = self.all, self.layer2, self.gblocks
+        Gravestone.containers = self.all, self.layer2, self.gblocks
+        CrossGravestone.containers = self.all, self.layer2, self.gblocks
+        FenceUpLeftCorner.containers = self.all, self.layer2, self.gblocks
+        FenceUpRightCorner.containers = self.all, self.layer2, self.gblocks
+        FenceTopBorder.containers = self.all, self.layer2, self.gblocks
+        FenceBottomLeftCorner.containers = self.all, self.layer2, self.gblocks
+        FenceBottomBorder.containers = self.all, self.layer2, self.gblocks
+        FenceBottomRightCorner.containers = self.all, self.layer2, self.gblocks
+        FenceLeftBorder.containers = self.all, self.layer2, self.gblocks
         
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png'])
