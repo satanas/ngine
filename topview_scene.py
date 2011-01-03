@@ -2,7 +2,7 @@
 
 #================================================
 #
-# Dummy Scene for the Ngine Example (please execute test.py)
+# Dummy Scene for the Top-View Example (please execute topview_example.py)
 #
 # Copyright (C) 2010  Wil Alvarez <wil.alejandro@gmail.com>
 #
@@ -15,8 +15,8 @@ from ngine import scene
 from ngine import collisions
 from ngine import particles
 
-from test_keys import *
-from test_objects import *
+from dummy_keys import *
+from topview_objects import *
 
 class DummyScene(scene.Scene):
     def __init__(self, director, _input, gamedata):

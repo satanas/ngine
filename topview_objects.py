@@ -2,7 +2,7 @@
 
 #================================================
 #
-# Dummy Objects for the Ngine Example (please execute test.py)
+# Dummy Objects for the Top-View Example (please execute topview_example.py)
 #
 # Copyright (C) 2010  Wil Alvarez <wil.alejandro@gmail.com>
 #

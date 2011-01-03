@@ -15,11 +15,11 @@ from ngine import director
 from ngine import gamedata
 from ngine import inputparser as input_p
 
-from test_keys import *
-from test_scene import DummyScene
+from dummy_keys import *
+from topview_scene import DummyScene
 
 def main():
-    gdata = gamedata.GameData('Ngine Example', (640, 480))
+    gdata = gamedata.GameData('Top-View Example - Ngine', (640, 480))
     
     # Map all input keys to Input Parser
     _input = input_p.InputParser()

@@ -32,6 +32,9 @@ class MapLoader:
     def __get_int_val(self, fd):
         return int(fd.readline().strip().split(' = ')[1])
         
+    def __get_float_val(self, fd):
+        return float(fd.readline().strip().split(' = ')[1])
+        
     def __get_str_val(self, fd):
         return fd.readline().strip().split(' = ')[1]
         
@@ -138,7 +141,7 @@ class MapLoader:
         self.tilewidth = self.__get_int_val(fd)
         self.tileheight = self.__get_int_val(fd)
         self.bgcolor = self.__build_color(self.__get_str_val(fd))
-        self.scrolling = self.__get_int_val(fd)
+        self.scrolling = self.__get_float_val(fd)
         fd.readline().strip()
         
         header = fd.readline()
