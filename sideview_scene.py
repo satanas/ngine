@@ -113,6 +113,7 @@ class DummyScene(scene.Scene):
     def check_collisions(self):
         for obj in self.gblocks:
             if collisions.check(self.player, obj):
+                print 'checked'
                 obj.collide(self.player)
                 
     def on_update(self):

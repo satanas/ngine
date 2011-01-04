@@ -19,7 +19,7 @@ from dummy_keys import *
 from sideview_scene import DummyScene
 
 def main():
-    gdata = gamedata.GameData('Side-View Example - Ngine', (640, 480))
+    gdata = gamedata.GameData('Side-View Example - Ngine', (640, 480), 1)
     
     # Map all input keys to Input Parser
     _input = input_p.InputParser()
@@ -31,11 +31,6 @@ def main():
     _input.bind_key(input_p.KEY_DOWN, pygame.K_LCTRL, ACTION2)
     _input.bind_key(input_p.KEY_DOWN, pygame.K_LSHIFT, ACTION3)
     _input.bind_key(input_p.KEY_DOWN, pygame.K_ESCAPE, EXIT)
-    
-    _input.bind_mouse_button(input_p.MOUSE_BUTTON_UP, 
-        input_p.MOUSE_LEFT_BUTTON, BUTTON1)
-    _input.bind_mouse_button(input_p.MOUSE_BUTTON_UP, 
-        input_p.MOUSE_RIGHT_BUTTON , BUTTON3)
         
     _dir = director.Director(gdata)
     scene = DummyScene(_dir, _input, gdata)

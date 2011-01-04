@@ -25,8 +25,8 @@ class Director:
             self.clock.tick(self.fps)
             
             self.quit = self.scene.handle_events()
-            self.scene.check_collisions()
             self.scene.update()
+            self.scene.check_collisions()
             self.scene.draw()
             
             pygame.display.flip()

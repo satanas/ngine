@@ -48,8 +48,16 @@ class Tux(objects.Actor, objects.FallingObject):
         elif xdir > 0:
             self.set_array(self.right_array)
         
+    def on_collide_top(self, object):
+        print 'collide top'
+        self.jumping = False
+        self.jump_speed = 0
+    
+    def on_collide_bottom(self, object):
+        print 'collide bottom'
+        
     def update(self):
-        #self.check_gravity()
+        self.check_gravity()
         if self.xdir == 0 and self.ydir == 0:
             if self.last_xdir < 0:
                 self.image = self.left_image

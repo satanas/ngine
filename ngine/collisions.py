@@ -8,6 +8,9 @@
 # Created at: Dic 22, 2010
 #===================================================
 
+import math
+import pygame
+
 def check(actor, obj):
     ox = obj.rect.centerx
     oy = obj.rect.centery
@@ -23,4 +26,24 @@ def check(actor, obj):
     
     if d2 <= r2:
         return obj.rect.colliderect(actor.rect)
+    '''
+    #else:
+    x1 = actor.old_centerx
+    y1 = actor.old_centery
+    
+    try:
+        #print (x1,y1), (ax, ay)
+        alpha = math.atan(abs(ay - y1)/abs(ax - x1))
+        h = math.sqrt(pow(abs(ay - y1), 2) + pow(abs(ax - x1), 2))
+        
+        #print alpha, h
+        #rect = pygame.Rect(1, h, 
+    except ZeroDivisionError:
+        rect = pygame.Rect(0, 0, actor.rect.width, abs(ay - y1))
+        rect.top = actor.rect.top
+        rect.centerx = actor.rect.centerx
+        
+        #print 'collision', rect, obj.rect, rect.colliderect(obj.rect)
+    '''
+    
     return False

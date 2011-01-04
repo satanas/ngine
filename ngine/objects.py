@@ -26,6 +26,8 @@ class SpriteObject(pygame.sprite.Sprite):
         self.last_xdir = 0
         self.last_ydir = 0
         self.old_pos = (0, 0)
+        self.old_centerx = 0
+        self.old_centery = 0
         
         self.anim_frame = 0
         self.anim_delay = 2
@@ -60,6 +62,8 @@ class SpriteObject(pygame.sprite.Sprite):
         self.last_xdir = xdir
         self.last_ydir = ydir
         self.old_pos = self.rect.topleft
+        self.old_centerx = self.rect.centerx
+        self.old_centery = self.rect.centery
         self.rect.move_ip(self.xspeed * xdir, self.yspeed * ydir)
         self.next_image()
         
@@ -89,7 +93,7 @@ class SpriteObject(pygame.sprite.Sprite):
     
 class FallingObject:
     ''' This checks for the gravity effect '''
-    def __init__(self, gravity=0.7, max_gravity_speed=13):
+    def __init__(self, gravity=0.7, max_gravity_speed=6):
         # Jump vars
         self.jump_speed = 0
         self.jumping = False
@@ -98,11 +102,14 @@ class FallingObject:
         
     # FIXME: Definir mejor estos valores de gravedad y velocidad de salto
     def check_gravity(self):
+        print 'jumping', self.jumping, self.jump_speed
         # Gravity and Jumping
         if self.jump_speed < self.max_gravity_speed:
             self.jump_speed += self.gravity
         if self.jump_speed >= 4.5:
             self.jumping = True
+        self.old_centerx = self.rect.centerx
+        self.old_centery = self.rect.centery
         self.rect.move_ip(0, self.jump_speed)
         
 class CollidableObject:
