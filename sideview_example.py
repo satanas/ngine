@@ -19,7 +19,7 @@ from dummy_keys import *
 from sideview_scene import DummyScene
 
 def main():
-    gdata = gamedata.GameData('Side-View Example - Ngine', (640, 480), 1)
+    gdata = gamedata.GameData('Side-View Example - Ngine', (640, 480), 60)
     
     # Map all input keys to Input Parser
     _input = input_p.InputParser()

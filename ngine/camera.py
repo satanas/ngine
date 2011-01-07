@@ -191,8 +191,8 @@ class Camera:
     def draw_groups(self, groups_list):
         for group in groups_list:
             for s in group.sprites():
-                if self.is_on_screen(s):
-                    x = s.rect.left-self.rect.left
-                    y = s.rect.top-self.rect.top
-                    self.screen.blit(s.image, (x, y, s.rect.width, s.rect.height))
+                #if self.is_on_screen(s):
+                x = s.rect.left-self.rect.left
+                y = s.rect.top-self.rect.top
+                self.screen.blit(s.image, (x, y, s.rect.width, s.rect.height))
     

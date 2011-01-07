@@ -15,8 +15,8 @@ from ngine.resources import tools
 
 # A class that represent a little square box on screen
 class Tux(objects.Actor, objects.FallingObject):
-    def __init__(self, res, pos):
-        objects.Actor.__init__(self)
+    def __init__(self, res, pos, group):
+        objects.Actor.__init__(self, group)
         objects.FallingObject.__init__(self)
         self.res = res
         
@@ -35,11 +35,12 @@ class Tux(objects.Actor, objects.FallingObject):
         self.right_image = tools.get_image_at(orig, 0, 0, 32, 32, ckey)
         self.left_image = tools.get_image_at(orig, 128, 32, 32, 32, ckey)
         
-        self.xspeed = 2.7
+        self.xspeed = 3
         self.yspeed = 2
         self.anim_delay = 4
         
         self.set_image(self.right_image, pos)
+        self.set_relative_rect()
         self.set_array(self.right_array)
         
     def on_move(self, xdir, ydir):
@@ -49,13 +50,14 @@ class Tux(objects.Actor, objects.FallingObject):
             self.set_array(self.right_array)
         
     def on_collide_top(self, object):
-        print 'collide top'
         self.jumping = False
         self.jump_speed = 0
-    
-    def on_collide_bottom(self, object):
-        print 'collide bottom'
         
+    def jump(self):
+        if not self.jumping:
+            self.jump_speed = -11
+            self.jumping = True
+            
     def update(self):
         self.check_gravity()
         if self.xdir == 0 and self.ydir == 0:
@@ -67,9 +69,10 @@ class Tux(objects.Actor, objects.FallingObject):
         self.ydir = 0
 
 # A class that represent a little square box on screen
-class Platform(objects.Actor, objects.UnwalkableObject):
+class Platform(objects.SpriteObject, objects.CollidableObject, objects.UnwalkableObject):
     def __init__(self, res, id, pos, top, bottom, left, right):
-        objects.Actor.__init__(self)
+        objects.SpriteObject.__init__(self)
+        objects.CollidableObject.__init__(self)
         objects.UnwalkableObject.__init__(self, top, bottom, left, right)
         self.res = res
         
@@ -93,4 +96,4 @@ class Platform(objects.Actor, objects.UnwalkableObject):
         elif id == '19':
             image = tools.get_image_at(orig, 72, 72, 24, 24)
         self.set_image(image, pos)
-        self.set_limits()
+        self.set_relative_rect()

@@ -32,6 +32,7 @@ class DummyScene(scene.Scene):
                     Block((block.real_x, block.real_y), tb, bb, lb, rb)
                 elif block.t_id == '65':
                     Tree(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                '''
                 elif block.t_id == '09':
                     WaterWell(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
                 elif block.t_id == '66':
@@ -52,11 +53,11 @@ class DummyScene(scene.Scene):
                     FenceBottomRightCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
                 elif block.t_id == '25':
                     FenceLeftBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-        
+                '''
         for row in self.maploader.layers['characters']:
             for char in row:
                 if char.t_id == '01':
-                    self.box = ArchMage(self.res, (char.real_x, char.real_y))
+                    self.box = ArchMage(self.res, (char.real_x, char.real_y), self.gblocks)
                 elif char.t_id == '02':
                     DeadBox((char.real_x, char.real_y))
         
@@ -107,13 +108,11 @@ class DummyScene(scene.Scene):
         
         if self._input.lookup(LEFT): 
             self.box.move(-1, 0)
-            self.scroll_bg(-self.box.xspeed)
-        if self._input.lookup(RIGHT): 
+        elif self._input.lookup(RIGHT): 
             self.box.move(1, 0)
-            self.scroll_bg(self.box.xspeed)
-        if self._input.lookup(UP): 
+        elif self._input.lookup(UP): 
             self.box.move(0, -1)
-        if self._input.lookup(DOWN): 
+        elif self._input.lookup(DOWN): 
             self.box.move(0, 1)
         #if self._input.lookup(ACTION1): 
         #    self.camera.pan_to_pos(self.target2.rect.center)
@@ -142,9 +141,7 @@ class DummyScene(scene.Scene):
         return False
     
     def check_collisions(self):
-        for obj in self.gblocks:
-            if collisions.check(self.box, obj):
-                obj.collide(self.box)
+        return
                 
     def on_update(self):
         self.all.update()

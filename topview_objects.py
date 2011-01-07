@@ -15,8 +15,8 @@ from ngine.resources import tools
 
 # A class that represent a little square box on screen
 class ArchMage(objects.Actor):
-    def __init__(self, res, pos):
-        objects.Actor.__init__(self)
+    def __init__(self, res, pos, group):
+        objects.Actor.__init__(self, group)
         self.res = res
         
         ckey = (255,0, 255)
@@ -47,6 +47,7 @@ class ArchMage(objects.Actor):
         self.anim_delay = 8
         
         self.set_image(self.front_image, pos)
+        self.set_relative_rect()
         self.set_array(self.front_array)
         
     def on_move(self, xdir, ydir):
@@ -91,26 +92,27 @@ class ItemBox(objects.SpriteObject):
         self.set_image(image, pos)
 
 # A class that represent a little square box on screen
-class Block(objects.Actor, objects.UnwalkableObject):
+class Block(objects.SpriteObject, objects.UnwalkableObject):
     def __init__(self, pos, top, bottom, left, right):
-        objects.Actor.__init__(self)
+        objects.SpriteObject.__init__(self)
         objects.UnwalkableObject.__init__(self, top, bottom, left, right)
         
         image = pygame.Surface((32, 32))
         image.fill((255,255,0))
         self.set_image(image, pos)
-        self.set_limits()
+        self.set_relative_rect()
         
-class Tree(objects.Actor, objects.UnwalkableObject):
+class Tree(objects.SpriteObject, objects.CollidableObject, objects.UnwalkableObject):
     def __init__(self, res, pos, top, bottom, left, right):
-        objects.Actor.__init__(self)
+        objects.SpriteObject.__init__(self)
+        objects.CollidableObject.__init__(self)
         objects.UnwalkableObject.__init__(self, top, bottom, left, right)
         self.res = res
         
         orig = self.res.image.get('map')
         image = tools.get_image_at(orig, 0, 256, 32, 32)
         self.set_image(image, pos)
-        self.set_limits()
+        self.set_relative_rect()
 
 class WaterWell(objects.Actor, objects.UnwalkableObject):
     def __init__(self, res, pos, top, bottom, left, right):

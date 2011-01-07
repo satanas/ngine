@@ -30,40 +30,12 @@ class DummyScene(scene.Scene):
                     continue
                 tb, bb, lb, rb = self.maploader.get_collide_bounds(block.x, block.y)
                 Platform(self.res, block.t_id, (block.real_x, block.real_y), tb, bb, lb, rb)
-        '''
-                elif block.t_id == '65':
-                    Tree(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '09':
-                    WaterWell(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '66':
-                    Gravestone(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '67':
-                    CrossGravestone(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '17':
-                    FenceUpLeftCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '19':
-                    FenceUpRightCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '18':
-                    FenceTopBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '33':
-                    FenceBottomLeftCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '34':
-                    FenceBottomBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '35':
-                    FenceBottomRightCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '25':
-                    FenceLeftBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-        '''
+        
         for row in self.maploader.layers['characters']:
             for char in row:
                 if char.t_id == '01':
-                    self.player = Tux(self.res, (char.real_x, char.real_y))
-        '''
-        for row in self.maploader.layers['items']:
-            for item in row:
-                if item.t_id == '01':
-                    ItemBox((item.real_x, item.real_y))
-        '''
+                    self.player = Tux(self.res, (char.real_x, char.real_y), self.gblocks)
+    
     def on_load(self):
         self.layer1 = pygame.sprite.Group()
         self.layer2 = pygame.sprite.Group()
@@ -92,29 +64,22 @@ class DummyScene(scene.Scene):
         if self._input.lookup(LEFT): 
             self.player.move(-1, 0)
             self.scroll_bg(-self.player.xspeed)
-        if self._input.lookup(RIGHT): 
+        elif self._input.lookup(RIGHT): 
             self.player.move(1, 0)
             self.scroll_bg(self.player.xspeed)
-        if self._input.lookup(UP): 
+        elif self._input.lookup(UP): 
             self.player.move(0, -1)
-        if self._input.lookup(DOWN): 
+        elif self._input.lookup(DOWN): 
             self.player.move(0, 1)
-        #if self._input.lookup(ACTION1): 
-        #    self.camera.pan_to_pos(self.target2.rect.center)
-        #if self._input.lookup(ACTION2): 
-        #    self.camera.move_to_pos(self.target3.rect.topleft, camera.TOPLEFT)
-        #if self._input.lookup(ACTION3): 
-        #    self.camera.move_to_rel(2,0)
+        if self._input.lookup(ACTION1): 
+            self.player.jump()
         if self._input.lookup(EXIT): 
             return True
         
         return False
     
     def check_collisions(self):
-        for obj in self.gblocks:
-            if collisions.check(self.player, obj):
-                print 'checked'
-                obj.collide(self.player)
+        return
                 
     def on_update(self):
         self.all.update()
