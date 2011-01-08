@@ -18,10 +18,10 @@ class Tux(objects.Actor, objects.FallingObject):
     def __init__(self, res, pos, group):
         objects.Actor.__init__(self, group)
         objects.FallingObject.__init__(self)
-        self.res = res
+        #self.res = res
         
         ckey = (0, 255, 0)
-        orig = self.res.image.get('tux')
+        orig = res.image.get('tux')
         self.right_array = [
             tools.get_image_at(orig, 32, 0, 32, 32, ckey),
             tools.get_image_at(orig, 64, 0, 32, 32, ckey),
@@ -97,3 +97,24 @@ class Platform(objects.SpriteObject, objects.CollidableObject, objects.Unwalkabl
             image = tools.get_image_at(orig, 72, 72, 24, 24)
         self.set_image(image, pos)
         self.set_relative_rect()
+
+class Coin(objects.SpriteObject):
+    def __init__(self, res, pos):
+        objects.SpriteObject.__init__(self)
+        
+        self.anim_delay = 5
+        
+        ckey = (0, 255, 0)
+        orig = res.image.get('coin')
+        array = [
+            tools.get_image_at(orig, 0, 0, 14, 14, ckey),
+            tools.get_image_at(orig, 14, 0, 14, 14, ckey),
+            tools.get_image_at(orig, 28, 0, 14, 14, ckey),
+            tools.get_image_at(orig, 42, 0, 14, 14, ckey),
+        ]
+        
+        self.set_image(array[0], pos)
+        self.set_array(array)
+    
+    def update(self):
+        self.next_image()

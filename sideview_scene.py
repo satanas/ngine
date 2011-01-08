@@ -35,7 +35,11 @@ class DummyScene(scene.Scene):
             for char in row:
                 if char.t_id == '01':
                     self.player = Tux(self.res, (char.real_x, char.real_y), self.gblocks)
-    
+        
+        for row in self.maploader.layers['items']:
+            for item in row:
+                if item.t_id == '01':
+                    Coin(self.res, (item.real_x, item.real_y))
     def on_load(self):
         self.layer1 = pygame.sprite.Group()
         self.layer2 = pygame.sprite.Group()
@@ -44,10 +48,11 @@ class DummyScene(scene.Scene):
         
         Tux.containers = self.all, self.layer1
         Platform.containers = self.all, self.layer2, self.gblocks
+        Coin.containers = self.all, self.layer2
         
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png', 'scroll.png'])
-        self.res.image.load(['tux.png', 'ground.png'])
+        self.res.image.load(['tux.png', 'ground.png', 'coin.png'])
         
         self.__load_map('01.map')
         
@@ -67,10 +72,6 @@ class DummyScene(scene.Scene):
         elif self._input.lookup(RIGHT): 
             self.player.move(1, 0)
             self.scroll_bg(self.player.xspeed)
-        elif self._input.lookup(UP): 
-            self.player.move(0, -1)
-        elif self._input.lookup(DOWN): 
-            self.player.move(0, 1)
         if self._input.lookup(ACTION1): 
             self.player.jump()
         if self._input.lookup(EXIT): 
