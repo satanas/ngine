@@ -98,9 +98,10 @@ class Platform(objects.SpriteObject, objects.CollidableObject, objects.Unwalkabl
         self.set_image(image, pos)
         self.set_relative_rect()
 
-class Coin(objects.SpriteObject):
+class Coin(objects.SpriteObject, objects.CollidableObject):
     def __init__(self, res, pos):
         objects.SpriteObject.__init__(self)
+        objects.CollidableObject.__init__(self)
         
         self.anim_delay = 5
         
@@ -114,6 +115,7 @@ class Coin(objects.SpriteObject):
         ]
         
         self.set_image(array[0], pos)
+        self.set_relative_rect()
         self.set_array(array)
     
     def update(self):

@@ -40,15 +40,17 @@ class DummyScene(scene.Scene):
             for item in row:
                 if item.t_id == '01':
                     Coin(self.res, (item.real_x, item.real_y))
+    
     def on_load(self):
         self.layer1 = pygame.sprite.Group()
         self.layer2 = pygame.sprite.Group()
         self.gblocks = pygame.sprite.Group()
+        self.gcoins = pygame.sprite.Group()
         self.all = pygame.sprite.Group()
         
         Tux.containers = self.all, self.layer1
         Platform.containers = self.all, self.layer2, self.gblocks
-        Coin.containers = self.all, self.layer2
+        Coin.containers = self.all, self.layer2, self.gcoins
         
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png', 'scroll.png'])
@@ -80,7 +82,9 @@ class DummyScene(scene.Scene):
         return False
     
     def check_collisions(self):
-        return
+        for obj in self.gcoins:
+             if collisions.check(self.player, obj):
+                 obj.kill()
                 
     def on_update(self):
         self.all.update()
