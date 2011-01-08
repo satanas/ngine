@@ -14,33 +14,37 @@ from ngine import objects
 from ngine.resources import tools
 
 # A class that represent a little square box on screen
-class ArchMage(objects.Actor):
+class Tux(objects.Actor):
     def __init__(self, res, pos, group):
         objects.Actor.__init__(self, group)
         self.res = res
         
-        ckey = (255,0, 255)
-        orig = self.res.image.get('archmage')
+        ckey = (0,255, 0)
+        orig = self.res.image.get('tux')
         self.front_array = [
-            tools.get_image_at(orig, 32, 0, 32, 32, ckey),
-            tools.get_image_at(orig, 64, 0, 32, 32, ckey)
+            tools.get_image_at(orig, 0, 64, 32, 32, ckey),
+            tools.get_image_at(orig, 32, 64, 32, 32, ckey),
+            tools.get_image_at(orig, 64, 64, 32, 32, ckey),
         ]
         self.back_array = [
-            tools.get_image_at(orig, 32, 32, 32, 32, ckey),
-            tools.get_image_at(orig, 64, 32, 32, 32, ckey)
+            tools.get_image_at(orig, 0, 96, 32, 32, ckey),
+            tools.get_image_at(orig, 32, 96, 32, 32, ckey),
+            tools.get_image_at(orig, 64, 96, 32, 32, ckey),
         ]
         self.right_array = [
-            tools.get_image_at(orig, 32, 64, 32, 32, ckey),
-            tools.get_image_at(orig, 64, 64, 32, 32, ckey)
+            tools.get_image_at(orig, 32, 0, 32, 32, ckey),
+            tools.get_image_at(orig, 64, 0, 32, 32, ckey),
+            tools.get_image_at(orig, 96, 0, 32, 32, ckey),
         ]
         self.left_array = [
-            tools.get_image_at(orig, 32, 96, 32, 32, ckey),
-            tools.get_image_at(orig, 64, 96, 32, 32, ckey)
+            tools.get_image_at(orig, 32, 32, 32, 32, ckey),
+            tools.get_image_at(orig, 64, 32, 32, 32, ckey),
+            tools.get_image_at(orig, 96, 32, 32, 32, ckey),
         ]
-        self.front_image = tools.get_image_at(orig, 0, 0, 32, 32, ckey)
-        self.back_image = tools.get_image_at(orig, 0, 32, 32, 32, ckey)
-        self.right_image = tools.get_image_at(orig, 0, 64, 32, 32, ckey)
-        self.left_image = tools.get_image_at(orig, 0, 96, 32, 32, ckey)
+        self.front_image = tools.get_image_at(orig, 0, 64, 32, 32, ckey)
+        self.back_image = tools.get_image_at(orig, 0, 96, 32, 32, ckey)
+        self.right_image = tools.get_image_at(orig, 0, 0, 32, 32, ckey)
+        self.left_image = tools.get_image_at(orig, 128, 32, 32, 32, ckey)
         
         self.xspeed = 2.5
         self.yspeed = 2.5
@@ -181,3 +185,26 @@ class Fence(objects.SpriteObject, objects.CollidableObject, objects.UnwalkableOb
             self.set_relative_rect(14, 32, left=self.rect.left + 2)
         else:
             self.set_relative_rect()
+            
+class Coin(objects.SpriteObject, objects.CollidableObject):
+    def __init__(self, res, pos):
+        objects.SpriteObject.__init__(self)
+        objects.CollidableObject.__init__(self)
+        
+        self.anim_delay = 5
+        
+        ckey = (0, 255, 0)
+        orig = res.image.get('coin')
+        array = [
+            tools.get_image_at(orig, 0, 0, 14, 14, ckey),
+            tools.get_image_at(orig, 14, 0, 14, 14, ckey),
+            tools.get_image_at(orig, 28, 0, 14, 14, ckey),
+            tools.get_image_at(orig, 42, 0, 14, 14, ckey),
+        ]
+        
+        self.set_image(array[0], pos)
+        self.set_relative_rect()
+        self.set_array(array)
+    
+    def update(self):
+        self.next_image()

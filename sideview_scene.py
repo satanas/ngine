@@ -20,6 +20,7 @@ from sideview_objects import *
 class DummyScene(scene.Scene):
     def __init__(self, director, _input, gamedata):
         scene.Scene.__init__(self, director, _input, gamedata)
+        self.quit = False
         
     def __load_map(self, filename):
         self.maploader.load(filename)
@@ -79,6 +80,8 @@ class DummyScene(scene.Scene):
             self.player.jump()
         if self._input.lookup(EXIT): 
             return True
+        if self.quit:
+            return True
         
         return False
     
@@ -90,16 +93,10 @@ class DummyScene(scene.Scene):
                 
     def on_update(self):
         self.all.update()
+        if self.player.rect.top > self.maploader.get_size()[1]:
+            self.quit = True
         
     def on_draw(self):
-        if self.effect == 3:
-            ang = random.randint(-25, 25)
-            particles.Particle(pos=pygame.mouse.get_pos(), angle=ang, 
-                               size=1.8, color_type='random', duration=1500, 
-                               vx=0.5, vy=1, ax=0, ay=0)
-        elif self.effect == 4:
-            particles.ParticlesBoost(pygame.mouse.get_pos(), 180, 2, 
-                                     particles=50)
         self.__text_on_screen()
     
     def __text_on_screen(self):
