@@ -17,8 +17,8 @@ Requirements
 
 Ngine needs:
 
- * ``python >= 2.5``
- * ``python-pygame >= 1.7``
+* ``python >= 2.5``
+* ``python-pygame >= 1.7``
 
 How To Use
 ----------
@@ -30,5 +30,5 @@ Contact
 
 You can contact me throught:
 
- * wil.alejandro (at gmail.com)
- * @satanas82(on twitter)
+* wil.alejandro (at gmail.com)
+* @satanas82(on twitter)
