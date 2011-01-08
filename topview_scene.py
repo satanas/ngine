@@ -32,28 +32,15 @@ class DummyScene(scene.Scene):
                     Block((block.real_x, block.real_y), tb, bb, lb, rb)
                 elif block.t_id == '65':
                     Tree(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                '''
                 elif block.t_id == '09':
                     WaterWell(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
                 elif block.t_id == '66':
                     Gravestone(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
                 elif block.t_id == '67':
                     CrossGravestone(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '17':
-                    FenceUpLeftCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '19':
-                    FenceUpRightCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '18':
-                    FenceTopBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '33':
-                    FenceBottomLeftCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '34':
-                    FenceBottomBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '35':
-                    FenceBottomRightCorner(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                elif block.t_id == '25':
-                    FenceLeftBorder(self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
-                '''
+                elif block.t_id in ['17', '18', '19', '33', '34', '35', '25']:
+                    Fence(block.t_id, self.res, (block.real_x, block.real_y), tb, bb, lb, rb)
+                
         for row in self.maploader.layers['characters']:
             for char in row:
                 if char.t_id == '01':
@@ -81,16 +68,9 @@ class DummyScene(scene.Scene):
         WaterWell.containers = self.all, self.layer2, self.gblocks
         Gravestone.containers = self.all, self.layer2, self.gblocks
         CrossGravestone.containers = self.all, self.layer2, self.gblocks
-        FenceUpLeftCorner.containers = self.all, self.layer2, self.gblocks
-        FenceUpRightCorner.containers = self.all, self.layer2, self.gblocks
-        FenceTopBorder.containers = self.all, self.layer2, self.gblocks
-        FenceBottomLeftCorner.containers = self.all, self.layer2, self.gblocks
-        FenceBottomBorder.containers = self.all, self.layer2, self.gblocks
-        FenceBottomRightCorner.containers = self.all, self.layer2, self.gblocks
-        FenceLeftBorder.containers = self.all, self.layer2, self.gblocks
+        Fence.containers = self.all, self.layer2, self.gblocks
         
         self.res.font.load_default('__default__', 16, (255,255,255))
-        self.res.bg.load(['bg1.png', 'bg2.png'])
         self.res.image.load(['archmage.png'])
         self.res.image.load(['map.bmp'])
         
@@ -101,7 +81,7 @@ class DummyScene(scene.Scene):
         self.append_to_draw(self.layer2)
         self.append_to_draw(self.layer1)
         self.set_camera_target(self.box)
-        self.set_backgrounds(bg1=self.maploader.layers['background'])
+        self.set_backgrounds(bg2=self.maploader.layers['background'])
         
     def handle_events(self):
         self._input.handle_input()
@@ -114,12 +94,6 @@ class DummyScene(scene.Scene):
             self.box.move(0, -1)
         elif self._input.lookup(DOWN): 
             self.box.move(0, 1)
-        #if self._input.lookup(ACTION1): 
-        #    self.camera.pan_to_pos(self.target2.rect.center)
-        #if self._input.lookup(ACTION2): 
-        #    self.camera.move_to_pos(self.target3.rect.topleft, camera.TOPLEFT)
-        #if self._input.lookup(ACTION3): 
-        #    self.camera.move_to_rel(2,0)
         if self._input.lookup(BUTTON1):
             if pygame.mouse.get_pos()[0] > 640/2: 
                 dir = 270
