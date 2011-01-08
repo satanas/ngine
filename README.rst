@@ -20,6 +20,16 @@ Ngine needs:
 * ``python >= 2.5``
 * ``python-pygame >= 1.7``
 
+Testing
+-------
+
+If you want to test Ngine execute any of the examples within the code:
+
+* ``sideview_example.py``
+* ``topview_example.py``
+
+And enjoy! :)
+
 How To Use
 ----------
 
