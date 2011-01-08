@@ -169,12 +169,15 @@ class Fence(objects.SpriteObject, objects.CollidableObject, objects.UnwalkableOb
             image = tools.get_image_at(orig, 0, 128, 32, 32)
         elif t_id == '34':
             image = tools.get_image_at(orig, 32, 128, 32, 32)
-            #self.set_relative_rect(32, 20, top=self.rect.top + 6)
         elif t_id == '35':
             image = tools.get_image_at(orig, 64, 128, 32, 32)
         elif t_id == '25':
             image = tools.get_image_at(orig, 0, 96, 32, 32)
-            #self.set_relative_rect(14, 32, left=self.rect.left + 2)
         
         self.set_image(image, pos)
-        self.set_relative_rect()
+        if t_id == '34':
+            self.set_relative_rect(32, 20, top=self.rect.top + 6)
+        elif t_id == '25':
+            self.set_relative_rect(14, 32, left=self.rect.left + 2)
+        else:
+            self.set_relative_rect()
