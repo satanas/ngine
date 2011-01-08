@@ -53,21 +53,21 @@ class Scene:
     def __composite_background(self):
         self.bg.fill(self.bg_color)
         
-        if self._bg1:
+        if self._bg1: 
+            self.bg.blit(self._bg1, (0,0))
+            
+        if self._bg2:
             x_pos, y_pos = self.camera.rect.topleft
             width, height = self.bg.get_size()
-            self.bg.blit(self._bg1, (0, 0, width, height), (x_pos, y_pos, width, height))
-        
-        if self._bg2: 
-            self.bg.blit(self._bg2, (self.x_offset, 0))
+            self.bg.blit(self._bg2, (0, 0, width, height), (x_pos, y_pos, width, height))
+            
+        if self._bg3: 
+            self.bg.blit(self._bg3, (self.x_offset, 0))
             if self.x_offset < 0:
                 x = self.x_offset + self.x_limit
             else:
                 x = self.x_offset - self.x_limit
-            self.bg.blit(self._bg2, (x, 0))
-        
-        if self._bg3: 
-            self.bg.blit(self._bg3, (0,0))
+            self.bg.blit(self._bg3, (x, 0))
                     
     def append_to_draw(self, group):
         self.groups_to_draw.append(group)
@@ -83,15 +83,15 @@ class Scene:
         self.camera.set_target(target)
     
     def set_backgrounds(self, bg1=None, bg2=None, bg3=None):
-        self._bg1 = bg1
-        if bg2:
-            self._bg2 = self.res.bg.get(bg2)
-            self.x_limit = self._bg2.get_size()[0]
+        if bg1:
+            self._bg1 = self.res.bg.get(bg1)
+        self._bg2 = bg2
         if bg3:
             self._bg3 = self.res.bg.get(bg3)
+            self.x_limit = self._bg3.get_size()[0]
         
     def scroll_bg(self, x_dir):
-        if not self._bg2:
+        if not self._bg3:
             return
         self.x_dir = x_dir
         

@@ -78,23 +78,25 @@ class Platform(objects.SpriteObject, objects.CollidableObject, objects.Unwalkabl
         
         image = pygame.Surface((24, 24))
         image.fill((255,255,0))
-        orig = self.res.image.get('ground')
+        orig = self.res.image.get('ice-ground')
         if id == '01':
             image = tools.get_image_at(orig, 0, 0, 24, 24)
-        if id == '02':
+        elif id == '02':
             image = tools.get_image_at(orig, 24, 0, 24, 24)
         elif id == '03':
             image = tools.get_image_at(orig, 48, 0, 24, 24)
         elif id == '04':
-            image = tools.get_image_at(orig, 72, 0, 24, 24)
-        elif id == '06':
             image = tools.get_image_at(orig, 0, 24, 24, 24)
+        elif id == '05':
+            image = tools.get_image_at(orig, 24, 24, 24, 24)
+        elif id == '06':
+            image = tools.get_image_at(orig, 48, 24, 24, 24)
+        elif id == '07':
+            image = tools.get_image_at(orig, 0, 48, 24, 24)
+        elif id == '08':
+            image = tools.get_image_at(orig, 24, 48, 24, 24)
         elif id == '09':
-            image = tools.get_image_at(orig, 72, 24, 24, 24)
-        elif id == '16':
-            image = tools.get_image_at(orig, 0, 72, 24, 24)
-        elif id == '19':
-            image = tools.get_image_at(orig, 72, 72, 24, 24)
+            image = tools.get_image_at(orig, 48, 48, 24, 24)
         self.set_image(image, pos)
         self.set_relative_rect()
 

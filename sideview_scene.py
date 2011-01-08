@@ -53,8 +53,9 @@ class DummyScene(scene.Scene):
         Coin.containers = self.all, self.layer2, self.gcoins
         
         self.res.font.load_default('__default__', 16, (255,255,255))
-        self.res.bg.load(['bg1.png', 'bg2.png', 'scroll.png'])
-        self.res.image.load(['tux.png', 'ground.png', 'coin.png'])
+        self.res.bg.load(['bg1.png', 'bg2.png', 'scroll.png', 'north-pole.png'])
+        self.res.image.load(['tux.png', 'ice-ground.png', 'coin.png'])
+        self.res.sound.load(['coin.ogg'])
         
         self.__load_map('01.map')
         
@@ -63,17 +64,17 @@ class DummyScene(scene.Scene):
         self.append_to_draw(self.layer2)
         self.append_to_draw(self.layer1)
         self.set_camera_target(self.player)
-        self.set_backgrounds(bg1=self.maploader.layers['background'], bg2='scroll')
+        self.set_backgrounds(bg1='north-pole', bg3='scroll')
         
     def handle_events(self):
         self._input.handle_input()
         
         if self._input.lookup(LEFT): 
             self.player.move(-1, 0)
-            self.scroll_bg(-self.player.xspeed)
+            self.scroll_bg(self.player.xspeed)
         elif self._input.lookup(RIGHT): 
             self.player.move(1, 0)
-            self.scroll_bg(self.player.xspeed)
+            self.scroll_bg(-self.player.xspeed)
         if self._input.lookup(ACTION1): 
             self.player.jump()
         if self._input.lookup(EXIT): 
@@ -82,9 +83,10 @@ class DummyScene(scene.Scene):
         return False
     
     def check_collisions(self):
-        for obj in self.gcoins:
-             if collisions.check(self.player, obj):
-                 obj.kill()
+        for coin in self.gcoins:
+             if collisions.check(self.player, coin):
+                 coin.kill()
+                 self.res.sound.play('coin')
                 
     def on_update(self):
         self.all.update()
