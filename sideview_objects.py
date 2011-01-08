@@ -34,6 +34,8 @@ class Tux(objects.Actor, objects.FallingObject):
         ]
         self.right_image = tools.get_image_at(orig, 0, 0, 32, 32, ckey)
         self.left_image = tools.get_image_at(orig, 128, 32, 32, 32, ckey)
+        self.jump_right_image = tools.get_image_at(orig, 128, 0, 32, 32, ckey)
+        self.jump_left_image = tools.get_image_at(orig, 0, 32, 32, 32, ckey)
         
         self.xspeed = 3
         self.yspeed = 2
@@ -42,6 +44,7 @@ class Tux(objects.Actor, objects.FallingObject):
         self.set_image(self.right_image, pos)
         self.set_relative_rect()
         self.set_array(self.right_array)
+        self.last_xdir = 1
         
     def on_move(self, xdir, ydir):
         if xdir < 0:
@@ -65,6 +68,11 @@ class Tux(objects.Actor, objects.FallingObject):
                 self.image = self.left_image
             elif self.last_xdir > 0:
                 self.image = self.right_image
+        if self.jumping:
+            if self.last_xdir < 0:
+                self.image = self.jump_left_image
+            elif self.last_xdir > 0:
+                self.image = self.jump_right_image
         self.xdir = 0
         self.ydir = 0
 
