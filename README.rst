@@ -4,7 +4,7 @@ Ngine
 **Summary:** Game Engine developed in PyGame
 
 *Ngine* is a framework/engine that allows you to develop games in PyGame really 
-fast and with few complications. All of this is beacuse:
+fast and with few complications. All of this is because:
 
 *"Making games should be fun too"*
 

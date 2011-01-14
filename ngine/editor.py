@@ -14,6 +14,8 @@ import cairo
 class Map(gtk.DrawingArea):
     def __init__(self):
         gtk.DrawingArea.__init__(self)
+        self.add_events(gtk.gdk.BUTTON_PRESS_MASK | gtk.gdk.BUTTON1_MOTION_MASK)
+        
         self.connect('expose-event', self.expose)
         self.width = 1
         self.height = 1
@@ -38,7 +40,7 @@ class Map(gtk.DrawingArea):
             'characters': True,
             'all': True
         }
-        
+    
     def __get_int_val(self, fd):
         return int(fd.readline().strip().split(' = ')[1])
         
@@ -120,7 +122,6 @@ class Map(gtk.DrawingArea):
     def set_layer(self, layer, value):
         self.enable[layer]= value
         self.queue_draw()
-        print 'queued'
         
     def expose(self, widget, event):
         cr = widget.window.cairo_create()
@@ -131,7 +132,6 @@ class Map(gtk.DrawingArea):
         cr.fill()
         
         if self.layers['background'] and self.enable['background']:
-            print 'bakdaldjsa'
             for i in range(self.height):
                 for j in range(self.width):
                     pix = self.layers['background'][i][j]
@@ -140,7 +140,7 @@ class Map(gtk.DrawingArea):
                         cr.paint()
                         del pix
         
-        if self.layers['decorations']:
+        if self.layers['decorations'] and self.enable['decorations']:
             for i in range(self.height):
                 for j in range(self.width):
                     pix = self.layers['decorations'][i][j]
@@ -149,7 +149,7 @@ class Map(gtk.DrawingArea):
                         cr.paint()
                         del pix
 
-        if self.layers['unwalkable']:
+        if self.layers['unwalkable'] and self.enable['unwalkable']:
             for i in range(self.height):
                 for j in range(self.width):
                     pix = self.layers['unwalkable'][i][j]
@@ -158,7 +158,7 @@ class Map(gtk.DrawingArea):
                         cr.paint()
                         del pix
                         
-        if self.layers['characters']:
+        if self.layers['characters'] and self.enable['characters']:
             for i in range(self.height):
                 for j in range(self.width):
                     pix = self.layers['characters'][i][j]
@@ -197,47 +197,32 @@ class MapEditor(gtk.Window):
         self._map = Map()
         self._map.load('02.map')
         scrolled_map.add_with_viewport(self._map)
+        self._map.connect("button-press-event", self.__print)
         
         # Build the toolbox
-        '''
-        layers = gtk.TreeView()
-        layers.set_headers_visible(False)
-        layers.set_events(gtk.gdk.POINTER_MOTION_MASK)
-        layers.set_level_indentation(0)
-        
-        model = gtk.ListStore(str, str)
-        
-        layers.set_model(model)
-        cell_text = gtk.CellRendererText()
-        #cell_text.set_property('yalign', 0)
-        #cell_text.set_property('xalign', 0)
-        
-        column = gtk.TreeViewColumn()
-        column.set_alignment(0.0)
-        column.pack_start(cell_text, True)
-        column.set_attributes(cell_text, text=0)
-        layers.append_column(column)
-        #layers.connect("button-release-event", self.__on_click)
-        #layers.connect("cursor-changed", self.__on_select)
-        lscroll = gtk.ScrolledWindow()
-        lscroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
-        lscroll.add(layers)
-        '''
-        
         bg_layer = LayerBox('Background')
         bg_layer.toggle.connect('toggled', self.__toggle_layer, 'background')
         dc_layers = LayerBox('Decorations', bg_layer.radio)
+        dc_layers.toggle.connect('toggled', self.__toggle_layer, 'decorations')
         uw_layers = LayerBox('Unwalkable', bg_layer.radio)
+        uw_layers.toggle.connect('toggled', self.__toggle_layer, 'unwalkable')
         it_layers = LayerBox('Items', bg_layer.radio)
+        it_layers.toggle.connect('toggled', self.__toggle_layer, 'items')
         ch_layers = LayerBox('Characters', bg_layer.radio)
+        ch_layers.toggle.connect('toggled', self.__toggle_layer, 'characters')
+        
+        layers_box = gtk.VBox(False)
+        layers_box.pack_start(bg_layer, False, False, 0)
+        layers_box.pack_start(dc_layers, False, False, 0)
+        layers_box.pack_start(uw_layers, False, False, 0)
+        layers_box.pack_start(it_layers, False, False, 0)
+        layers_box.pack_start(ch_layers, False, False, 0)
+        layers = gtk.Frame('Layers')
+        layers.add(layers_box)
         
         toolbox = gtk.VBox(False)
         toolbox.set_size_request(224, 600)
-        toolbox.pack_start(bg_layer, False, False, 0)
-        toolbox.pack_start(dc_layers, False, False, 0)
-        toolbox.pack_start(uw_layers, False, False, 0)
-        toolbox.pack_start(it_layers, False, False, 0)
-        toolbox.pack_start(ch_layers, False, False, 0)
+        toolbox.pack_start(layers, False, False, 0)
         
         mainbox = gtk.HBox(False)
         mainbox.pack_start(scrolled_map, True, True)
@@ -256,6 +241,9 @@ class MapEditor(gtk.Window):
         self.add(vbox)
         
         self.show_all()
+        
+    def __print(self, widget, event):
+        print 'scrolled', event.x, event.y, event.button
         
     def __toggle_layer(self, widget, layer):
         self._map.set_layer(layer, widget.get_active())
