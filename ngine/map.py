@@ -90,6 +90,10 @@ class MapLoader:
         self.layers['scrolling'] = tools.get_datafile_path('images', filename)
         
     def __process_unwalkable(self, fd):
+        tilename = self.__get_str_val(fd)
+        tsw = self.__get_int_val(fd)
+        tsh = self.__get_int_val(fd)
+        
         self.layers['unwalkable'] = []
         for i in range(self.height):
             line = fd.readline().strip().split(' ')
@@ -100,6 +104,10 @@ class MapLoader:
             self.layers['unwalkable'].append(row)
     
     def __process_characters(self, fd):
+        tilename = self.__get_str_val(fd)
+        tsw = self.__get_int_val(fd)
+        tsh = self.__get_int_val(fd)
+        
         self.layers['characters'] = []
         for i in range(self.height):
             line = fd.readline().strip().split(' ')
@@ -110,6 +118,10 @@ class MapLoader:
             self.layers['characters'].append(row)
     
     def __process_items(self, fd):
+        tilename = self.__get_str_val(fd)
+        tsw = self.__get_int_val(fd)
+        tsh = self.__get_int_val(fd)
+        
         self.layers['items'] = []
         for i in range(self.height):
             line = fd.readline().strip().split(' ')
