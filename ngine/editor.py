@@ -22,17 +22,25 @@ class MapTest(gtk.DrawingArea):
         
     def expose(self, widget, event):
         cr = widget.window.cairo_create()
-        cr.set_line_width(0.8)
+        cr.set_line_width(0.3)
         rect = self.get_allocation()
         
         w_tile = 32
         h_tile = 32
         
-        cr.rectangle(event.area.x, event.area.y, event.area.width, event.area.height)
-        cr.clip()
+        cr.set_source_rgb(0.0, 0.0, 0.0)
+        cr.rectangle(0, 0, 1600, 1600)
+        cr.fill()
         
-        cr.rectangle(0, 0, rect.width, rect.height)
-        cr.paint()
+        cr.set_source_rgb(1.0, 1.0, 1.0)
+        for i in range (1600/32):
+            cr.move_to(32 * i, 0)
+            cr.line_to(32 * i, 1600)
+            
+            cr.move_to(0, 32 * i)
+            cr.line_to(1600, 32 * i)
+            
+            cr.stroke()
 
 class MapEditor(gtk.Window):
     def __init__(self):
