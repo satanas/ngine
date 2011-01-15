@@ -204,7 +204,7 @@ class MapEditor(gtk.Window):
         scrolled_map = gtk.ScrolledWindow()
         scrolled_map.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         self._map = Map()
-        self._map.load('02.map')
+        self._map.load('01.map')
         scrolled_map.add_with_viewport(self._map)
         self._map.connect("button-press-event", self.__print)
         

@@ -194,12 +194,12 @@ class Coin(objects.SpriteObject, objects.CollidableObject):
         self.anim_delay = 5
         
         ckey = (0, 255, 0)
-        orig = res.image.get('coin')
+        orig = res.image.get('coin32')
         array = [
-            tools.get_image_at(orig, 0, 0, 14, 14, ckey),
-            tools.get_image_at(orig, 14, 0, 14, 14, ckey),
-            tools.get_image_at(orig, 28, 0, 14, 14, ckey),
-            tools.get_image_at(orig, 42, 0, 14, 14, ckey),
+            tools.get_image_at(orig, 0, 0, 32, 32, ckey),
+            tools.get_image_at(orig, 32, 0, 32, 32, ckey),
+            tools.get_image_at(orig, 64, 0, 32, 32, ckey),
+            tools.get_image_at(orig, 96, 0, 32, 32, ckey),
         ]
         
         self.set_image(array[0], pos)

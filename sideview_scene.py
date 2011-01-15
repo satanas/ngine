@@ -55,7 +55,7 @@ class DummyScene(scene.Scene):
         
         self.res.font.load_default('__default__', 16, (255,255,255))
         self.res.bg.load(['bg1.png', 'bg2.png', 'scroll.png', 'north-pole.png'])
-        self.res.image.load(['tux.png', 'ice-ground.png', 'coin.png'])
+        self.res.image.load(['tux.png', 'ice-ground.png', 'coin24.png'])
         self.res.sound.load(['coin.ogg'])
         
         self.__load_map('01.map')

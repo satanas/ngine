@@ -67,7 +67,7 @@ class DummyScene(scene.Scene):
         Fence.containers = self.all, self.layer2, self.gblocks
         
         self.res.font.load_default('__default__', 16, (255,255,255))
-        self.res.image.load(['map2.png', 'map.png', 'tux.png', 'coin.png'])
+        self.res.image.load(['map2.png', 'map.png', 'tux.png', 'coin32.png'])
         self.res.sound.load(['coin.ogg'])
         
         self.__load_map('02.map')

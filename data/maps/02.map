@@ -107,7 +107,7 @@ tilesetheight = 4
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
 [items]
-tileset = coin.png
+tileset = coin32.png
 tilesetwidth = 4
 tilesetheight = 1
 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
