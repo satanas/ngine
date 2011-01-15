@@ -157,6 +157,15 @@ class Map(gtk.DrawingArea):
                         cr.set_source_pixbuf(pix, self.tilewidth * j, self.tileheight * i)
                         cr.paint()
                         del pix
+        
+        if self.layers['items'] and self.enable['items']:
+            for i in range(self.height):
+                for j in range(self.width):
+                    pix = self.layers['items'][i][j]
+                    if pix:
+                        cr.set_source_pixbuf(pix, self.tilewidth * j, self.tileheight * i)
+                        cr.paint()
+                        del pix
                         
         if self.layers['characters'] and self.enable['characters']:
             for i in range(self.height):
